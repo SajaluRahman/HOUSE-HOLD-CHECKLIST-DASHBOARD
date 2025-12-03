@@ -15,6 +15,7 @@ export default function Sidebar({ activePage, setActivePage }: SidebarProps) {
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-5" /> },
     { id: "audit", label: "Housekeeping Audit", icon: <ClipboardList className="size-5" /> },
     { id: "observations", label: "Observations", icon: <Eye className="size-5" /> },
+    { id: "housekeeping-audits", label: "Housekeeping Audits", icon: <ClipboardList className="size-5" /> },
     { id: "users", label: "Users", icon: <Users className="size-5" /> },
     { id: "settings", label: "Settings", icon: <Settings className="size-5" /> },
   ]

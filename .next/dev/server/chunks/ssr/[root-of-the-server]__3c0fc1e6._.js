@@ -2215,7 +2215,7 @@ function HousekeepingAudit({ categories, setCategories }) {
     const [selectedCategoryId, setSelectedCategoryId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [editingItem, setEditingItem] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [dateFilter, setDateFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({});
-    // Add new category - ready for API
+    // Add new category
     const handleAddCategory = (name)=>{
         const newCategory = {
             id: Date.now().toString(),
@@ -2231,7 +2231,7 @@ function HousekeepingAudit({ categories, setCategories }) {
         setShowCategoryForm(false);
         setShowItemForm(true);
     };
-    // Add multiple items - ready for API
+    // Add multiple items
     const handleAddItems = (items)=>{
         if (!selectedCategoryId) return;
         const newItems = items.map((item, index)=>({
@@ -2249,20 +2249,21 @@ function HousekeepingAudit({ categories, setCategories }) {
             } : cat));
         setShowItemForm(false);
     };
-    // Edit item - ready for API
+    // Edit single item
     const handleEditItem = (item)=>{
         if (!editingItem || !selectedCategoryId) return;
         setCategories(categories.map((cat)=>cat.id === selectedCategoryId ? {
                 ...cat,
                 items: cat.items.map((i)=>i.id === editingItem.id ? {
                         ...i,
-                        ...item
+                        ...item,
+                        status: i.status
                     } : i)
             } : cat));
         setEditingItem(null);
         setShowItemForm(false);
     };
-    // Toggle status - ready for API
+    // Toggle status
     const handleToggleStatus = (categoryId, itemId, status)=>{
         setCategories(categories.map((cat)=>cat.id === categoryId ? {
                 ...cat,
@@ -2272,151 +2273,388 @@ function HousekeepingAudit({ categories, setCategories }) {
                     } : item)
             } : cat));
     };
-    // Export data
+    // Updated Export Function to Match PDF/Image Exactly
     const handleExport = async ()=>{
         const workbook = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$exceljs$2f$excel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].Workbook();
-        const worksheet = workbook.addWorksheet("Housekeeping Audit", {
+        const sheet = workbook.addWorksheet("Housekeeping Audit", {
             pageSetup: {
                 paperSize: 9,
-                orientation: "landscape"
+                orientation: "landscape",
+                fitToPage: true,
+                fitToWidth: 1,
+                fitToHeight: 0
+            },
+            properties: {
+                defaultRowHeight: 20,
+                defaultColWidth: 15
             }
         });
-        // Define columns - make sure ALL fields are included
-        worksheet.columns = [
+        // Fetch logo
+        let logoId;
+        try {
+            const logoResponse = await fetch("https://res.cloudinary.com/protenders/image/upload/s--HAKnWaBu--/c_limit,d_default_logo,dpr_auto,f_auto,fl_progressive:semi,q_auto:eco,w_auto:100/244ed00a56bf535f459230ec60059cb9.jpg");
+            const logoBuffer = await logoResponse.arrayBuffer();
+            logoId = workbook.addImage({
+                buffer: logoBuffer,
+                extension: "jpeg"
+            });
+            sheet.addImage(logoId, {
+                tl: {
+                    col: 0.1,
+                    row: 0.1
+                },
+                ext: {
+                    width: 120,
+                    height: 60
+                }
+            });
+        } catch (e) {
+            console.error("Failed to load logo:", e);
+        }
+        // Title
+        sheet.mergeCells("A2:G2");
+        const titleCell = sheet.getCell("A2");
+        titleCell.value = "HOUSEKEEPING AUDIT CHECKLIST";
+        titleCell.font = {
+            bold: true,
+            size: 16,
+            color: {
+                argb: "FF000080"
+            }
+        }; // Navy blue
+        titleCell.alignment = {
+            horizontal: "center",
+            vertical: "middle"
+        };
+        // Form Fields
+        sheet.getCell("A4").value = "Base Location :";
+        sheet.mergeCells("B4:D4");
+        sheet.getCell("B4").value = "______________________________";
+        sheet.getCell("E4").value = "Inspected by:";
+        sheet.mergeCells("F4:G4");
+        sheet.getCell("F4").value = "__________________";
+        sheet.getCell("A5").value = "Ward/Unit/Department:";
+        sheet.mergeCells("B5:D5");
+        sheet.getCell("B5").value = "______________________________";
+        sheet.getCell("E5").value = "Date:";
+        sheet.mergeCells("F5:G5");
+        sheet.getCell("F5").value = new Date().toLocaleDateString();
+        sheet.getCell("E6").value = "Time:";
+        sheet.mergeCells("F6:G6");
+        sheet.getCell("F6").value = new Date().toLocaleTimeString().slice(0, 5);
+        // Measurable Standard and Key
+        sheet.mergeCells("A7:D10");
+        const standardCell = sheet.getCell("A7");
+        standardCell.value = "Measurable Standard: Clean is defined as the area is free of dust, stains, rubbish and wetness, looks tidy, neat, orderly and is spotless.\nKEY: (√) Met the Standard\n(X) Didn't Meet the Standard\n(N/A) Not Applicable";
+        standardCell.font = {
+            size: 10
+        };
+        standardCell.alignment = {
+            wrapText: true,
+            vertical: "top",
+            horizontal: "left"
+        };
+        // Action Timeframe Legend
+        sheet.mergeCells("E7:G10");
+        const timeframeCell = sheet.getCell("E7");
+        timeframeCell.value = "Action Timeframe:\nImmediate (within 24 hrs.)\nUrgent (5 days)\nOngoing (1 month)\nOpen (un specified time due to financial, administrative or engineering constraints)";
+        timeframeCell.font = {
+            size: 10
+        };
+        timeframeCell.alignment = {
+            wrapText: true,
+            vertical: "top",
+            horizontal: "left"
+        };
+        let currentRow = 12;
+        // Define columns
+        sheet.columns = [
             {
-                header: "Category",
-                key: "category",
-                width: 22
+                header: "#",
+                key: "no",
+                width: 5
             },
             {
-                header: "Item Name",
-                key: "itemName",
-                width: 35
-            },
-            {
-                header: "Element",
+                header: "Elements",
                 key: "element",
-                width: 20
+                width: 50
             },
             {
                 header: "Comments",
                 key: "comments",
-                width: 40
-            },
-            {
-                header: "Action",
-                key: "action",
                 width: 30
             },
             {
-                header: "Frame",
-                key: "frame",
+                header: "Out of",
+                key: "outof",
+                width: 10
+            },
+            {
+                header: "Score",
+                key: "score",
+                width: 10
+            },
+            {
+                header: "Action timeframe",
+                key: "timeframe",
                 width: 18
             },
             {
-                header: "Summore",
-                key: "summore",
-                width: 25
-            },
-            {
-                header: "Status",
-                key: "status",
-                width: 14
-            },
-            {
-                header: "Created At",
-                key: "createdAt",
-                width: 16
-            },
-            {
-                header: "Category Created",
-                key: "categoryCreated",
-                width: 18
+                header: "Action Taken Y/N",
+                key: "actionTaken",
+                width: 15
             }
         ];
-        // Style the header row
-        const headerRow = worksheet.getRow(1);
-        headerRow.font = {
-            bold: true,
-            color: {
-                argb: "FFFFFFFF"
-            }
-        };
-        headerRow.fill = {
-            type: "pattern",
-            pattern: "solid",
-            fgColor: {
-                argb: "FF17A2A2"
-            }
-        };
-        headerRow.alignment = {
-            vertical: "middle",
-            horizontal: "center"
-        };
-        headerRow.height = 24;
-        let totalChecked = 0;
+        // Table Header
+        const headerRow = sheet.getRow(currentRow);
+        headerRow.values = [
+            "#",
+            "Elements",
+            "Comments",
+            "Out of",
+            "Score",
+            "Action timeframe",
+            "Action Taken Y/N"
+        ];
+        headerRow.eachCell((cell)=>{
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: {
+                    argb: "FFADD8E6"
+                }
+            }; // Light blue
+            cell.font = {
+                bold: true
+            };
+            cell.alignment = {
+                vertical: "middle",
+                horizontal: "center"
+            };
+            cell.border = {
+                top: {
+                    style: "thin"
+                },
+                left: {
+                    style: "thin"
+                },
+                bottom: {
+                    style: "thin"
+                },
+                right: {
+                    style: "thin"
+                }
+            };
+        });
+        headerRow.height = 25;
+        currentRow++;
+        let catIndex = 0;
+        let totalScore = 0;
+        let totalOut = 0;
         let totalItems = 0;
-        // Add data from filtered categories
+        let totalChecked = 0;
         filteredCategories.forEach((category)=>{
-            const categoryCreatedDate = new Date(category.createdAt);
-            const categoryDateStr = `${categoryCreatedDate.getDate()} ${categoryCreatedDate.toLocaleString("default", {
-                month: "short"
-            })} ${categoryCreatedDate.getFullYear()}`;
-            if (category.items.length === 0) {
-                worksheet.addRow({
-                    category: category.name,
-                    itemName: "(No items in this category)",
-                    status: "",
-                    categoryCreated: categoryDateStr
-                });
-                return;
-            }
+            if (category.items.length === 0) return;
+            // Section Header Row
+            const sectionRow = sheet.getRow(currentRow);
+            sectionRow.getCell(1).value = ++catIndex;
+            sectionRow.getCell(2).value = category.name.toUpperCase();
+            sheet.mergeCells(`B${currentRow}:G${currentRow}`);
+            sectionRow.getCell(1).font = {
+                bold: true
+            };
+            sectionRow.getCell(2).font = {
+                bold: true
+            };
+            sectionRow.getCell(2).alignment = {
+                horizontal: "left"
+            };
+            sectionRow.eachCell((cell, colNumber)=>{
+                if (colNumber <= 7) {
+                    cell.fill = {
+                        type: "pattern",
+                        pattern: "solid",
+                        fgColor: {
+                            argb: "FFD3D3D3"
+                        }
+                    }; // Gray
+                    cell.border = {
+                        top: {
+                            style: "thin"
+                        },
+                        left: {
+                            style: "thin"
+                        },
+                        bottom: {
+                            style: "thin"
+                        },
+                        right: {
+                            style: "thin"
+                        }
+                    };
+                }
+            });
+            sectionRow.height = 20;
+            currentRow++;
+            // Item Rows
             category.items.forEach((item)=>{
-                const itemDate = new Date(item.createdAt);
-                const itemDateStr = `${itemDate.getDate().toString().padStart(2, "0")}/${(itemDate.getMonth() + 1).toString().padStart(2, "0")}/${itemDate.getFullYear()}`;
-                const rowData = {
-                    category: category.name,
-                    itemName: item.name || "",
-                    element: item.element || "",
-                    comments: item.comments || "",
-                    action: item.action || "",
-                    frame: item.frame || "",
-                    summore: item.summore || "",
-                    status: item.status === "checked" ? "Checked" : item.status === "crossed" ? "Failed" : "Pending",
-                    createdAt: itemDateStr,
-                    categoryCreated: categoryDateStr
-                };
-                worksheet.addRow(rowData);
+                const itemRow = sheet.getRow(currentRow);
+                itemRow.values = [
+                    "",
+                    item.name || "",
+                    item.comments || "",
+                    item.outOf || "",
+                    item.score || "",
+                    item.frame || "",
+                    item.status === "checked" ? "Y" : item.status === "crossed" ? "N" : ""
+                ];
+                itemRow.eachCell((cell)=>{
+                    cell.alignment = {
+                        wrapText: true,
+                        vertical: "middle",
+                        horizontal: "left"
+                    };
+                    cell.border = {
+                        top: {
+                            style: "thin"
+                        },
+                        left: {
+                            style: "thin"
+                        },
+                        bottom: {
+                            style: "thin"
+                        },
+                        right: {
+                            style: "thin"
+                        }
+                    };
+                });
+                itemRow.height = 20;
+                currentRow++;
                 totalItems++;
                 if (item.status === "checked") totalChecked++;
+                if (item.outOf) totalOut += Number(item.outOf);
+                if (item.score) totalScore += Number(item.score);
             });
-            // Optional: add a blank row between categories for better visual separation
-            worksheet.addRow({});
+            currentRow++; // Space after category
         });
-        // Add Summary Row at the bottom
-        const summaryRowNumber = worksheet.rowCount + 2;
-        worksheet.mergeCells(`A${summaryRowNumber}:J${summaryRowNumber}`);
-        const summaryCell = worksheet.getCell(`A${summaryRowNumber}`);
-        summaryCell.value = `SUMMARY: ${totalChecked} out of ${totalItems} items completed`;
-        summaryCell.font = {
-            bold: true,
-            size: 14,
-            color: {
-                argb: "FF17A2A2"
+        // SCOURED and Percentage
+        const scouredRow = sheet.getRow(currentRow);
+        sheet.mergeCells(`A${currentRow}:F${currentRow}`);
+        scouredRow.getCell(1).value = "SCOURED";
+        scouredRow.getCell(1).font = {
+            bold: true
+        };
+        scouredRow.getCell(1).alignment = {
+            horizontal: "left"
+        };
+        scouredRow.getCell(7).value = totalOut > 0 ? `${Math.round(totalScore / totalOut * 100)}%` : "";
+        scouredRow.getCell(7).alignment = {
+            horizontal: "center"
+        };
+        scouredRow.eachCell((cell, colNumber)=>{
+            if (colNumber <= 7) {
+                cell.fill = {
+                    type: "pattern",
+                    pattern: "solid",
+                    fgColor: {
+                        argb: "FFADD8E6"
+                    }
+                };
+                cell.border = {
+                    top: {
+                        style: "thin"
+                    },
+                    left: {
+                        style: "thin"
+                    },
+                    bottom: {
+                        style: "thin"
+                    },
+                    right: {
+                        style: "thin"
+                    }
+                };
             }
-        };
-        summaryCell.alignment = {
-            horizontal: "center",
-            vertical: "middle"
-        };
-        summaryCell.fill = {
-            type: "pattern",
-            pattern: "solid",
-            fgColor: {
-                argb: "FFF4F4F4"
-            }
-        };
-        // Generate and download file
+        });
+        currentRow += 2;
+        // Observations Table Header
+        const obsHeaderRow = sheet.getRow(currentRow);
+        obsHeaderRow.values = [
+            "S. No",
+            "Observations",
+            "Person Responsible",
+            "Action Plan",
+            "Time Frame",
+            "Signature of Supervisor",
+            "Support Service Follow up"
+        ];
+        obsHeaderRow.eachCell((cell)=>{
+            cell.font = {
+                bold: true
+            };
+            cell.alignment = {
+                horizontal: "center",
+                vertical: "middle"
+            };
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: {
+                    argb: "FFADD8E6"
+                }
+            };
+            cell.border = {
+                top: {
+                    style: "thin"
+                },
+                left: {
+                    style: "thin"
+                },
+                bottom: {
+                    style: "thin"
+                },
+                right: {
+                    style: "thin"
+                }
+            };
+        });
+        currentRow++;
+        // Add 5 blank rows for observations
+        for(let i = 0; i < 5; i++){
+            const blankRow = sheet.getRow(currentRow);
+            blankRow.eachCell((cell, colNumber)=>{
+                if (colNumber <= 7) {
+                    cell.border = {
+                        top: {
+                            style: "thin"
+                        },
+                        left: {
+                            style: "thin"
+                        },
+                        bottom: {
+                            style: "thin"
+                        },
+                        right: {
+                            style: "thin"
+                        }
+                    };
+                }
+            });
+            blankRow.height = 20;
+            currentRow++;
+        }
+        currentRow += 2;
+        // Sign & Date
+        sheet.mergeCells(`A${currentRow}:C${currentRow}`);
+        sheet.getCell(`A${currentRow}`).value = "SIGN & DATE_______________________";
+        sheet.mergeCells(`D${currentRow}:G${currentRow}`);
+        sheet.getCell(`D${currentRow}`).value = "DESIGNATION ____________________";
+        currentRow += 2;
+        // Footer Code
+        sheet.getCell(`A${currentRow}`).value = "HAC/08/24-002";
+        sheet.getCell(`A${currentRow + 1}`).value = "Housekeeping Department";
+        // Download
         try {
             const buffer = await workbook.xlsx.writeBuffer();
             const blob = new Blob([
@@ -2427,17 +2665,14 @@ function HousekeepingAudit({ categories, setCategories }) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `Housekeeping-Audit-${new Date().toISOString().slice(0, 10)}.xlsx`;
-            document.body.appendChild(a);
+            a.download = `Housekeeping_Audit_Checklist_${new Date().toISOString().slice(0, 10)}.xlsx`;
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error("Export failed:", error);
-            alert("Export failed. Please try again.");
+            alert("Failed to export Excel file. Please try again.");
         }
     };
-    // Open forms
     const openItemForm = (categoryId)=>{
         setSelectedCategoryId(categoryId);
         setEditingItem(null);
@@ -2448,18 +2683,15 @@ function HousekeepingAudit({ categories, setCategories }) {
         setEditingItem(item);
         setShowItemForm(true);
     };
-    // Filter categories by date
+    // Filter items by date
     const filteredCategories = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
         if (!dateFilter.day && !dateFilter.month && !dateFilter.year) {
             return categories;
         }
         return categories.map((cat)=>{
             const filteredItems = cat.items.filter((item)=>{
-                const date = new Date(item.createdAt);
-                const matchDay = !dateFilter.day || date.getDate() === dateFilter.day;
-                const matchMonth = !dateFilter.month || date.getMonth() + 1 === dateFilter.month;
-                const matchYear = !dateFilter.year || date.getFullYear() === dateFilter.year;
-                return matchDay && matchMonth && matchYear;
+                const d = new Date(item.createdAt);
+                return (!dateFilter.day || d.getDate() === dateFilter.day) && (!dateFilter.month || d.getMonth() + 1 === dateFilter.month) && (!dateFilter.year || d.getFullYear() === dateFilter.year);
             });
             return {
                 ...cat,
@@ -2470,12 +2702,11 @@ function HousekeepingAudit({ categories, setCategories }) {
         categories,
         dateFilter
     ]);
-    // Calculate stats
     const stats = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
-        const allItems = filteredCategories.flatMap((cat)=>cat.items);
+        const all = filteredCategories.flatMap((c)=>c.items);
         return {
-            total: allItems.length,
-            checked: allItems.filter((i)=>i.status === "checked").length
+            total: all.length,
+            checked: all.filter((i)=>i.status === "checked").length
         };
     }, [
         filteredCategories
@@ -2493,7 +2724,7 @@ function HousekeepingAudit({ categories, setCategories }) {
                                 children: "Housekeeping Audit List"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 252,
+                                lineNumber: 396,
                                 columnNumber: 11
                             }, this),
                             categories.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2507,13 +2738,13 @@ function HousekeepingAudit({ categories, setCategories }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 254,
+                                lineNumber: 398,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 251,
+                        lineNumber: 395,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2524,37 +2755,37 @@ function HousekeepingAudit({ categories, setCategories }) {
                                 activeFilter: dateFilter
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 260,
+                                lineNumber: 404,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>setShowCategoryForm(true),
-                                className: "px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90 transition-colors",
+                                className: "px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90",
                                 children: "+ Add Category"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 261,
+                                lineNumber: 405,
                                 columnNumber: 11
                             }, this),
                             categories.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: handleExport,
-                                className: "px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors",
-                                children: "Export"
+                                className: "px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9]",
+                                children: "Export to Excel"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 268,
+                                lineNumber: 412,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 259,
+                        lineNumber: 403,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 250,
+                lineNumber: 394,
                 columnNumber: 7
             }, this),
             showCategoryForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$category$2d$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2562,8 +2793,8 @@ function HousekeepingAudit({ categories, setCategories }) {
                 onCancel: ()=>setShowCategoryForm(false)
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 279,
-                columnNumber: 28
+                lineNumber: 424,
+                columnNumber: 9
             }, this),
             showItemForm && selectedCategoryId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$audit$2d$item$2d$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 onSubmitMultiple: handleAddItems,
@@ -2577,7 +2808,7 @@ function HousekeepingAudit({ categories, setCategories }) {
                 isEditing: !!editingItem
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 283,
+                lineNumber: 431,
                 columnNumber: 9
             }, this),
             categories.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2588,22 +2819,22 @@ function HousekeepingAudit({ categories, setCategories }) {
                         children: "No categories yet. Add your first category to get started."
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 299,
+                        lineNumber: 449,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>setShowCategoryForm(true),
-                        className: "px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors",
+                        className: "px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9]",
                         children: "+ Add Category"
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 300,
+                        lineNumber: 452,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 298,
+                lineNumber: 448,
                 columnNumber: 9
             }, this) : filteredCategories.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "bg-white border border-[#D7DDE5] rounded-xl p-12 text-center",
@@ -2613,22 +2844,22 @@ function HousekeepingAudit({ categories, setCategories }) {
                         children: "No items match the current filter."
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 309,
+                        lineNumber: 461,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>setDateFilter({}),
-                        className: "px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors",
+                        className: "px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9]",
                         children: "Clear Filter"
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 310,
+                        lineNumber: 462,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 308,
+                lineNumber: 460,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-6",
@@ -2638,10 +2869,10 @@ function HousekeepingAudit({ categories, setCategories }) {
                         month: "short"
                     })} ${date.getFullYear()}`;
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "bg-white border border-[#D7DDE5] rounded-xl overflow-hidden",
+                        className: "bg-white border border-[#D7DDE5] rounded-xl overflow-hidden shadow-sm",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "p-6 border-b border-[#D7DDE5] flex items-center justify-between",
+                                className: "p-6 border-b border-[#D7DDE5] flex items-center justify-between bg-gradient-to-r from-[#1D3C8F]/5 to-transparent",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
@@ -2650,7 +2881,7 @@ function HousekeepingAudit({ categories, setCategories }) {
                                                 children: category.name
                                             }, void 0, false, {
                                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                                lineNumber: 327,
+                                                lineNumber: 482,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2661,28 +2892,28 @@ function HousekeepingAudit({ categories, setCategories }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                                lineNumber: 328,
+                                                lineNumber: 483,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/housekeeping-audit.tsx",
-                                        lineNumber: 326,
+                                        lineNumber: 481,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         onClick: ()=>openItemForm(category.id),
-                                        className: "px-3 py-1.5 text-sm font-medium text-[#17A2A2] border border-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/10 transition-colors",
+                                        className: "px-4 py-2 text-sm font-medium text-[#17A2A2] border border-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/10 transition",
                                         children: "+ Add Item"
                                     }, void 0, false, {
                                         fileName: "[project]/components/housekeeping-audit.tsx",
-                                        lineNumber: 330,
+                                        lineNumber: 485,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 325,
+                                lineNumber: 480,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2694,30 +2925,30 @@ function HousekeepingAudit({ categories, setCategories }) {
                                     onEdit: (item)=>openEditForm(category.id, item)
                                 }, void 0, false, {
                                     fileName: "[project]/components/housekeeping-audit.tsx",
-                                    lineNumber: 338,
+                                    lineNumber: 494,
                                     columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 337,
+                                lineNumber: 493,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, category.id, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 324,
+                        lineNumber: 476,
                         columnNumber: 15
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 318,
+                lineNumber: 470,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/housekeeping-audit.tsx",
-        lineNumber: 248,
+        lineNumber: 392,
         columnNumber: 5
     }, this);
 }
@@ -4203,10 +4434,19 @@ function App() {
                     lineNumber: 37,
                     columnNumber: 16
                 }, this);
+            case "housekeeping-audit":
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(HousekeepingAuditChecklist, {
+                    categories: categories,
+                    setCategories: setCategories
+                }, void 0, false, {
+                    fileName: "[project]/app/page.tsx",
+                    lineNumber: 39,
+                    columnNumber: 16
+                }, this);
             case "settings":
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$settings$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 39,
+                    lineNumber: 41,
                     columnNumber: 16
                 }, this);
             default:
@@ -4217,7 +4457,7 @@ function App() {
                     usersCount: 0
                 }, void 0, false, {
                     fileName: "[project]/app/page.tsx",
-                    lineNumber: 41,
+                    lineNumber: 43,
                     columnNumber: 16
                 }, this);
         }
@@ -4230,7 +4470,7 @@ function App() {
                 setActivePage: setActivePage
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 47,
+                lineNumber: 49,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -4238,13 +4478,13 @@ function App() {
                 children: renderPage()
             }, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 48,
+                lineNumber: 50,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 46,
+        lineNumber: 48,
         columnNumber: 5
     }, this);
 }

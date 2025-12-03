@@ -8,6 +8,7 @@ import Observations from "@/components/observations"
 import Users from "@/components/users"
 import Settings from "@/components/settings"
 import type { PageType, Category, Observation, User } from "@/lib/types"
+import HousekeepingAuditChecklist from "@/components/HousekeepingAuditChecklist"
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageType>("dashboard")
@@ -35,6 +36,9 @@ export default function App() {
         return <Observations observations={observations} setObservations={setObservations} />
       case "users":
         return <Users users={users} setUsers={setUsers} />
+      case "housekeeping-audits":
+        return <HousekeepingAuditChecklist />
+
       case "settings":
         return <Settings />
       default:
