@@ -3,11 +3,6 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import type { Observation } from "@/lib/types"
 
 interface ObservationFormProps {
@@ -16,91 +11,109 @@ interface ObservationFormProps {
   initialData?: Observation | null
 }
 
-export function ObservationForm({ onSubmit, onCancel, initialData }: ObservationFormProps) {
-  const [observation, setObservation] = useState("")
-  const [personResponsible, setPersonResponsible] = useState("")
-  const [actionPlan, setActionPlan] = useState("")
-  const [timeFrame, setTimeFrame] = useState("")
+export default function ObservationForm({ onSubmit, onCancel, initialData }: ObservationFormProps) {
+  const [formData, setFormData] = useState({
+    observation: "",
+    personResponsible: "",
+    actionPlan: "",
+    timeFrame: "",
+  })
 
   useEffect(() => {
     if (initialData) {
-      setObservation(initialData.observation)
-      setPersonResponsible(initialData.personResponsible)
-      setActionPlan(initialData.actionPlan)
-      setTimeFrame(initialData.timeFrame)
+      setFormData({
+        observation: initialData.observation,
+        personResponsible: initialData.personResponsible,
+        actionPlan: initialData.actionPlan,
+        timeFrame: initialData.timeFrame,
+      })
     }
   }, [initialData])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (observation.trim() && personResponsible.trim()) {
+    if (formData.observation.trim() && formData.personResponsible.trim()) {
       onSubmit({
-        observation: observation.trim(),
-        personResponsible: personResponsible.trim(),
-        actionPlan: actionPlan.trim(),
-        timeFrame: timeFrame.trim(),
+        observation: formData.observation.trim(),
+        personResponsible: formData.personResponsible.trim(),
+        actionPlan: formData.actionPlan.trim(),
+        timeFrame: formData.timeFrame.trim(),
       })
     }
   }
 
+  const updateField = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value })
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{initialData ? "Edit Observation" : "Add New Observation"}</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden">
+      <div className="p-6 border-b border-[#D7DDE5] bg-[#1D3C8F]">
+        <h3 className="text-lg font-semibold text-white">{initialData ? "Edit Observation" : "Add New Observation"}</h3>
+      </div>
+      <div className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="observation">Observations</Label>
-            <Textarea
-              id="observation"
-              value={observation}
-              onChange={(e) => setObservation(e.target.value)}
+          <div>
+            <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Observations</label>
+            <textarea
+              value={formData.observation}
+              onChange={(e) => updateField("observation", e.target.value)}
               placeholder="Enter observation details"
               rows={3}
               autoFocus
+              className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2] resize-none"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="person">Person Responsible</Label>
-              <Input
-                id="person"
-                value={personResponsible}
-                onChange={(e) => setPersonResponsible(e.target.value)}
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Person Responsible</label>
+              <input
+                type="text"
+                value={formData.personResponsible}
+                onChange={(e) => updateField("personResponsible", e.target.value)}
                 placeholder="Enter person name"
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2]"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="timeframe">Time Frame</Label>
-              <Input
-                id="timeframe"
-                value={timeFrame}
-                onChange={(e) => setTimeFrame(e.target.value)}
-                placeholder="e.g., 2 weeks, End of month"
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Time Frame</label>
+              <input
+                type="text"
+                value={formData.timeFrame}
+                onChange={(e) => updateField("timeFrame", e.target.value)}
+                placeholder="e.g., 2 weeks"
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2]"
               />
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="action">Action Plan</Label>
-            <Textarea
-              id="action"
-              value={actionPlan}
-              onChange={(e) => setActionPlan(e.target.value)}
+          <div>
+            <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Action Plan</label>
+            <textarea
+              value={formData.actionPlan}
+              onChange={(e) => updateField("actionPlan", e.target.value)}
               placeholder="Enter action plan"
               rows={3}
+              className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2] resize-none"
             />
           </div>
           <div className="flex gap-3 justify-end">
-            <Button type="button" variant="outline" onClick={onCancel}>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+            >
               Cancel
-            </Button>
-            <Button type="submit" disabled={!observation.trim() || !personResponsible.trim()}>
+            </button>
+            <button
+              type="submit"
+              disabled={!formData.observation.trim() || !formData.personResponsible.trim()}
+              className="px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90 transition-colors disabled:opacity-50"
+            >
               {initialData ? "Update" : "Submit"}
-            </Button>
+            </button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

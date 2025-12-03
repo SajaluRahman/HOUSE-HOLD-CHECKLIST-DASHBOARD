@@ -1,9 +1,5 @@
 "use client"
 
-import { Check, X, Pencil } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
 import type { AuditItem, Timeframe } from "@/lib/types"
 
 interface AuditTableProps {
@@ -13,130 +9,141 @@ interface AuditTableProps {
   onEdit: (item: AuditItem) => void
 }
 
-const timeframeColors: Record<Timeframe, string> = {
-  Immediate: "bg-priority-immediate text-primary-foreground",
-  Urgent: "bg-priority-urgent text-primary-foreground",
-  Ongoing: "bg-priority-ongoing text-primary-foreground",
-  Open: "bg-priority-open text-primary-foreground",
+// Timeframe colors
+const TIMEFRAME_COLORS: Record<Timeframe, string> = {
+  Immediate: "#DC2626",
+  Urgent: "#F59E0B",
+  Ongoing: "#10B981",
+  Open: "#3B82F6",
 }
 
+// Format date helper
 function formatDate(dateString: string) {
   const date = new Date(dateString)
-  const day = date.getDate()
-  const month = date.toLocaleString("default", { month: "short" })
-  const year = date.getFullYear()
-  return { day, month, year, full: `${day} ${month} ${year}` }
+  return {
+    day: date.getDate(),
+    month: date.toLocaleString("default", { month: "short" }),
+    year: date.getFullYear(),
+  }
 }
 
-export function AuditTable({ items, categoryId, onToggleStatus, onEdit }: AuditTableProps) {
+export default function AuditTable({ items, categoryId, onToggleStatus, onEdit }: AuditTableProps) {
   const totalItems = items.length
   const checkedCount = items.filter((item) => item.status === "checked").length
 
   if (items.length === 0) {
     return (
-      <p className="text-center text-muted-foreground py-8">
+      <p className="text-center text-[#2E2E2E]/60 py-8">
         No items in this category yet. Click "Add Item" to get started.
       </p>
     )
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[120px]">Date</TableHead>
-          <TableHead className="w-[180px]">Element</TableHead>
-          <TableHead>Comments</TableHead>
-          <TableHead className="w-[120px]">Timeframe</TableHead>
-          <TableHead className="w-[120px] text-center">Out of Mark</TableHead>
-          <TableHead className="w-[140px] text-center">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {items.map((item) => {
-          const dateInfo = formatDate(item.createdAt)
-          return (
-            <TableRow key={item.id}>
-              <TableCell>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {dateInfo.day} {dateInfo.month}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{dateInfo.year}</span>
-                </div>
-              </TableCell>
-              <TableCell
-                className={cn("font-medium", item.status === "crossed" && "line-through text-muted-foreground")}
-              >
-                {item.element}
-              </TableCell>
-              <TableCell className={cn(item.status === "crossed" && "line-through text-muted-foreground")}>
-                {item.comments || "-"}
-              </TableCell>
-              <TableCell>
-                <span className={cn("px-2 py-1 rounded-full text-xs font-medium", timeframeColors[item.timeframe])}>
-                  {item.timeframe}
-                </span>
-              </TableCell>
-              <TableCell className="text-center">
-                {item.status === "checked" ? (
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    <Check className="w-4 h-4" />
-                  </span>
-                ) : item.status === "crossed" ? (
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-destructive text-destructive-foreground text-xs font-bold">
-                    <X className="w-4 h-4" />
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-center gap-1">
-                  <Button
-                    size="icon"
-                    variant={item.status === "checked" ? "default" : "outline"}
-                    className="h-8 w-8"
-                    onClick={() => onToggleStatus(categoryId, item.id, "checked")}
-                    title="Mark as checked"
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-[#D7DDE5] bg-[#F6F7F9]">
+            <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Date</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Element</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Comments</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Timeframe</th>
+            <th className="px-4 py-3 text-center text-sm font-semibold text-[#2E2E2E]">Status</th>
+            <th className="px-4 py-3 text-center text-sm font-semibold text-[#2E2E2E]">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => {
+            const dateInfo = formatDate(item.createdAt)
+            const isCrossed = item.status === "crossed"
+            const isChecked = item.status === "checked"
+
+            return (
+              <tr key={item.id} className="border-b border-[#D7DDE5]/50 hover:bg-[#F6F7F9]">
+                <td className="px-4 py-3">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-[#2E2E2E]">
+                      {dateInfo.day} <span className="text-[#17A2A2] font-semibold">{dateInfo.month}</span>
+                    </span>
+                    <span className="text-xs text-[#2E2E2E]/60">{dateInfo.year}</span>
+                  </div>
+                </td>
+                <td
+                  className={`px-4 py-3 font-medium ${isCrossed ? "line-through text-[#2E2E2E]/40" : "text-[#2E2E2E]"}`}
+                >
+                  {item.element}
+                </td>
+                <td className={`px-4 py-3 ${isCrossed ? "line-through text-[#2E2E2E]/40" : "text-[#2E2E2E]/80"}`}>
+                  {item.comments || "-"}
+                </td>
+                <td className="px-4 py-3">
+                  <span
+                    className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                    style={{ backgroundColor: TIMEFRAME_COLORS[item.timeframe] }}
                   >
-                    <Check className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant={item.status === "crossed" ? "destructive" : "outline"}
-                    className="h-8 w-8"
-                    onClick={() => onToggleStatus(categoryId, item.id, "crossed")}
-                    title="Mark as crossed"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-8 w-8 bg-transparent"
-                    onClick={() => onEdit(item)}
-                    title="Edit item"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          )
-        })}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={4} className="font-semibold">
-            Total Completed
-          </TableCell>
-          <TableCell className="text-center font-bold text-primary">
-            {checkedCount} / {totalItems}
-          </TableCell>
-          <TableCell />
-        </TableRow>
-      </TableFooter>
-    </Table>
+                    {item.timeframe}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  {isChecked && (
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#17A2A2] text-white text-sm">
+                      ✓
+                    </span>
+                  )}
+                  {isCrossed && (
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500 text-white text-sm">
+                      ✗
+                    </span>
+                  )}
+                  {!isChecked && !isCrossed && <span className="text-[#2E2E2E]/40">-</span>}
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => onToggleStatus(categoryId, item.id, "checked")}
+                      title="Mark as checked"
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                        isChecked
+                          ? "bg-[#17A2A2] text-white"
+                          : "border border-[#D7DDE5] text-[#2E2E2E] hover:bg-[#17A2A2]/10"
+                      }`}
+                    >
+                      ✓
+                    </button>
+                    <button
+                      onClick={() => onToggleStatus(categoryId, item.id, "crossed")}
+                      title="Mark as crossed"
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                        isCrossed ? "bg-red-500 text-white" : "border border-[#D7DDE5] text-[#2E2E2E] hover:bg-red-50"
+                      }`}
+                    >
+                      ✗
+                    </button>
+                    <button
+                      onClick={() => onEdit(item)}
+                      title="Edit item"
+                      className="w-8 h-8 rounded-lg border border-[#D7DDE5] text-[#2E2E2E] hover:bg-[#F6F7F9] flex items-center justify-center transition-colors"
+                    >
+                      ✎
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+        <tfoot>
+          <tr className="bg-[#1D3C8F]/5">
+            <td colSpan={4} className="px-4 py-3 font-semibold text-[#1D3C8F]">
+              Total Completed
+            </td>
+            <td className="px-4 py-3 text-center font-bold text-[#17A2A2] text-lg">
+              {checkedCount} / {totalItems}
+            </td>
+            <td />
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   )
 }

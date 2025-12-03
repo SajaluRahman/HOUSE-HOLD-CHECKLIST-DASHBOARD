@@ -1,19 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, Download, Pencil, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ObservationForm } from "@/components/observation-form"
+import ObservationForm from "@/components/observation-form"
 import type { Observation } from "@/lib/types"
 
-export function Observations() {
-  const [observations, setObservations] = useState<Observation[]>([])
+interface ObservationsProps {
+  observations: Observation[]
+  setObservations: (observations: Observation[]) => void
+}
+
+export default function Observations({ observations, setObservations }: ObservationsProps) {
   const [showForm, setShowForm] = useState(false)
   const [editingObservation, setEditingObservation] = useState<Observation | null>(null)
 
-  const handleAddObservation = (data: Omit<Observation, "id">) => {
+  // Add observation - ready for API
+  const handleAdd = (data: Omit<Observation, "id">) => {
     const newObservation: Observation = {
       ...data,
       id: Date.now().toString(),
@@ -22,26 +23,25 @@ export function Observations() {
     setShowForm(false)
   }
 
-  const handleEditObservation = (data: Omit<Observation, "id">) => {
+  // Edit observation - ready for API
+  const handleEdit = (data: Omit<Observation, "id">) => {
     if (!editingObservation) return
     setObservations(observations.map((obs) => (obs.id === editingObservation.id ? { ...obs, ...data } : obs)))
     setEditingObservation(null)
     setShowForm(false)
   }
 
+  // Delete observation - ready for API
   const handleDelete = (id: string) => {
     setObservations(observations.filter((obs) => obs.id !== id))
   }
 
+  // Export data
   const handleExport = () => {
     const exportData = observations.map((obs, index) => ({
       sNo: index + 1,
-      observations: obs.observation,
-      personResponsible: obs.personResponsible,
-      actionPlan: obs.actionPlan,
-      timeFrame: obs.timeFrame,
+      ...obs,
     }))
-
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
@@ -51,38 +51,36 @@ export function Observations() {
     URL.revokeObjectURL(url)
   }
 
-  const openEditForm = (observation: Observation) => {
-    setEditingObservation(observation)
-    setShowForm(true)
-  }
-
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Observations</h2>
+        <h2 className="text-2xl font-bold text-[#2E2E2E]">Observations</h2>
         <div className="flex gap-3">
-          <Button
+          <button
             onClick={() => {
               setEditingObservation(null)
               setShowForm(true)
             }}
-            className="gap-2"
+            className="px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90 transition-colors"
           >
-            <Plus className="w-4 h-4" />
-            Add Observation
-          </Button>
+            + Add Observation
+          </button>
           {observations.length > 0 && (
-            <Button variant="outline" onClick={handleExport} className="gap-2 bg-transparent">
-              <Download className="w-4 h-4" />
+            <button
+              onClick={handleExport}
+              className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+            >
               Export
-            </Button>
+            </button>
           )}
         </div>
       </div>
 
+      {/* Form */}
       {showForm && (
         <ObservationForm
-          onSubmit={editingObservation ? handleEditObservation : handleAddObservation}
+          onSubmit={editingObservation ? handleEdit : handleAdd}
           onCancel={() => {
             setShowForm(false)
             setEditingObservation(null)
@@ -91,68 +89,64 @@ export function Observations() {
         />
       )}
 
+      {/* Table */}
       {observations.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground mb-4">
-              No observations yet. Add your first observation to get started.
-            </p>
-            <Button onClick={() => setShowForm(true)} variant="outline">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Observation
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="bg-white border border-[#D7DDE5] rounded-xl p-12 text-center">
+          <p className="text-[#2E2E2E]/60 mb-4">No observations yet. Add your first observation.</p>
+          <button
+            onClick={() => setShowForm(true)}
+            className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+          >
+            + Add Observation
+          </button>
+        </div>
       ) : (
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[80px]">S. No</TableHead>
-                  <TableHead>Observations</TableHead>
-                  <TableHead>Person Responsible</TableHead>
-                  <TableHead>Action Plan</TableHead>
-                  <TableHead>Time Frame</TableHead>
-                  <TableHead className="w-[100px] text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+        <div className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[#D7DDE5] bg-[#F6F7F9]">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E] w-16">S.No</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Observations</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Person Responsible</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Action Plan</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-[#2E2E2E]">Time Frame</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-[#2E2E2E] w-24">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
                 {observations.map((obs, index) => (
-                  <TableRow key={obs.id}>
-                    <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell>{obs.observation}</TableCell>
-                    <TableCell>{obs.personResponsible}</TableCell>
-                    <TableCell>{obs.actionPlan}</TableCell>
-                    <TableCell>{obs.timeFrame}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-center gap-1">
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-8 w-8 bg-transparent"
-                          onClick={() => openEditForm(obs)}
-                          title="Edit"
+                  <tr key={obs.id} className="border-b border-[#D7DDE5]/50 hover:bg-[#F6F7F9]">
+                    <td className="px-4 py-3 font-medium text-[#1D3C8F]">{index + 1}</td>
+                    <td className="px-4 py-3 text-[#2E2E2E]">{obs.observation}</td>
+                    <td className="px-4 py-3 text-[#2E2E2E]">{obs.personResponsible}</td>
+                    <td className="px-4 py-3 text-[#2E2E2E]">{obs.actionPlan}</td>
+                    <td className="px-4 py-3 text-[#2E2E2E]">{obs.timeFrame}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingObservation(obs)
+                            setShowForm(true)
+                          }}
+                          className="w-8 h-8 rounded-lg border border-[#D7DDE5] text-[#2E2E2E] hover:bg-[#F6F7F9] flex items-center justify-center"
                         >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-8 w-8 text-destructive hover:bg-destructive hover:text-destructive-foreground bg-transparent"
+                          ✎
+                        </button>
+                        <button
                           onClick={() => handleDelete(obs.id)}
-                          title="Delete"
+                          className="w-8 h-8 rounded-lg border border-[#D7DDE5] text-red-500 hover:bg-red-50 flex items-center justify-center"
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                          🗑
+                        </button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   )

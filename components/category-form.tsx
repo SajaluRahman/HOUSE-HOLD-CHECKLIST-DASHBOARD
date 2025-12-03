@@ -3,17 +3,13 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 
 interface CategoryFormProps {
   onSubmit: (name: string) => void
   onCancel: () => void
 }
 
-export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
+export default function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
   const [name, setName] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,32 +20,41 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add New Category</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden">
+      <div className="p-6 border-b border-[#D7DDE5] bg-[#1D3C8F]">
+        <h3 className="text-lg font-semibold text-white">Add New Category</h3>
+      </div>
+      <div className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="category-name">Category Name</Label>
-            <Input
-              id="category-name"
+          <div>
+            <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Category Name</label>
+            <input
+              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter category name"
               autoFocus
+              className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2] focus:border-transparent"
             />
           </div>
           <div className="flex gap-3 justify-end">
-            <Button type="button" variant="outline" onClick={onCancel}>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+            >
               Cancel
-            </Button>
-            <Button type="submit" disabled={!name.trim()}>
+            </button>
+            <button
+              type="submit"
+              disabled={!name.trim()}
+              className="px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Submit
-            </Button>
+            </button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

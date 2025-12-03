@@ -3,13 +3,6 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Plus, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { AuditItem, Timeframe } from "@/lib/types"
 
 interface AuditItemFormProps {
@@ -28,14 +21,15 @@ interface ItemDraft {
   timeframe: Timeframe
 }
 
-const timeframes: { value: Timeframe; label: string; color: string }[] = [
-  { value: "Immediate", label: "Immediate", color: "bg-priority-immediate" },
-  { value: "Urgent", label: "Urgent", color: "bg-priority-urgent" },
-  { value: "Ongoing", label: "Ongoing", color: "bg-priority-ongoing" },
-  { value: "Open", label: "Open", color: "bg-priority-open" },
+// Timeframe options with colors
+const TIMEFRAMES: { value: Timeframe; label: string; color: string }[] = [
+  { value: "Immediate", label: "Immediate", color: "#DC2626" },
+  { value: "Urgent", label: "Urgent", color: "#F59E0B" },
+  { value: "Ongoing", label: "Ongoing", color: "#10B981" },
+  { value: "Open", label: "Open", color: "#3B82F6" },
 ]
 
-export function AuditItemForm({
+export default function AuditItemForm({
   onSubmitMultiple,
   onSubmitSingle,
   onCancel,
@@ -43,37 +37,49 @@ export function AuditItemForm({
   categoryName,
   isEditing,
 }: AuditItemFormProps) {
-  const [items, setItems] = useState<ItemDraft[]>([
-    { id: Date.now().toString(), element: "", comments: "", timeframe: "Open" },
-  ])
+  // State for multiple items
+  const [items, setItems] = useState<ItemDraft[]>([{ id: "1", element: "", comments: "", timeframe: "Open" }])
 
-  // For editing single item
-  const [editElement, setEditElement] = useState("")
-  const [editComments, setEditComments] = useState("")
-  const [editTimeframe, setEditTimeframe] = useState<Timeframe>("Open")
+  // State for editing single item
+  const [editData, setEditData] = useState({
+    element: "",
+    comments: "",
+    timeframe: "Open" as Timeframe,
+  })
 
+  // State for dropdowns
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+
+  // Load initial data when editing
   useEffect(() => {
     if (initialData && isEditing) {
-      setEditElement(initialData.element)
-      setEditComments(initialData.comments)
-      setEditTimeframe(initialData.timeframe)
+      setEditData({
+        element: initialData.element,
+        comments: initialData.comments,
+        timeframe: initialData.timeframe,
+      })
     }
   }, [initialData, isEditing])
 
+  // Update item field
   const updateItem = (id: string, field: keyof ItemDraft, value: string) => {
     setItems(items.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
+    setOpenDropdown(null)
   }
 
+  // Add new item
   const addNewItem = () => {
     setItems([...items, { id: Date.now().toString(), element: "", comments: "", timeframe: "Open" }])
   }
 
+  // Remove item
   const removeItem = (id: string) => {
     if (items.length > 1) {
       setItems(items.filter((item) => item.id !== id))
     }
   }
 
+  // Submit multiple items
   const handleDone = () => {
     const validItems = items.filter((item) => item.element.trim())
     if (validItems.length > 0) {
@@ -87,152 +93,215 @@ export function AuditItemForm({
     }
   }
 
+  // Submit single item (edit)
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (editElement.trim()) {
+    if (editData.element.trim()) {
       onSubmitSingle({
-        element: editElement.trim(),
-        comments: editComments.trim(),
-        timeframe: editTimeframe,
+        element: editData.element.trim(),
+        comments: editData.comments.trim(),
+        timeframe: editData.timeframe,
       })
     }
   }
 
-  // Editing mode - single item form
+  // Get color for timeframe
+  const getTimeframeColor = (tf: Timeframe) => {
+    return TIMEFRAMES.find((t) => t.value === tf)?.color || "#3B82F6"
+  }
+
+  // Edit form
   if (isEditing && initialData) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Item - {categoryName}</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden">
+        <div className="p-6 border-b border-[#D7DDE5] bg-[#1D3C8F]">
+          <h3 className="text-lg font-semibold text-white">Edit Item - {categoryName}</h3>
+        </div>
+        <div className="p-6">
           <form onSubmit={handleEditSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="element">Element</Label>
-              <Input
-                id="element"
-                value={editElement}
-                onChange={(e) => setEditElement(e.target.value)}
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Element</label>
+              <input
+                type="text"
+                value={editData.element}
+                onChange={(e) => setEditData({ ...editData, element: e.target.value })}
                 placeholder="Enter element name"
                 autoFocus
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2]"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="comments">Comments</Label>
-              <Textarea
-                id="comments"
-                value={editComments}
-                onChange={(e) => setEditComments(e.target.value)}
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Comments</label>
+              <textarea
+                value={editData.comments}
+                onChange={(e) => setEditData({ ...editData, comments: e.target.value })}
                 placeholder="Enter comments"
                 rows={3}
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2] resize-none"
               />
             </div>
-            <div className="space-y-2">
-              <Label>Action Timeframe</Label>
-              <Select value={editTimeframe} onValueChange={(v) => setEditTimeframe(v as Timeframe)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeframes.map((tf) => (
-                    <SelectItem key={tf.value} value={tf.value}>
-                      <div className="flex items-center gap-2">
-                        <span className={`w-3 h-3 rounded-full ${tf.color}`} />
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Action Timeframe</label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setOpenDropdown(openDropdown === "edit" ? null : "edit")}
+                  className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg text-left flex items-center justify-between bg-white"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: getTimeframeColor(editData.timeframe) }}
+                    />
+                    {editData.timeframe}
+                  </div>
+                  <span>▼</span>
+                </button>
+                {openDropdown === "edit" && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-[#D7DDE5] rounded-lg shadow-lg">
+                    {TIMEFRAMES.map((tf) => (
+                      <button
+                        key={tf.value}
+                        type="button"
+                        onClick={() => {
+                          setEditData({ ...editData, timeframe: tf.value })
+                          setOpenDropdown(null)
+                        }}
+                        className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-[#F6F7F9]"
+                      >
+                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: tf.color }} />
                         {tf.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex gap-3 justify-end">
-              <Button type="button" variant="outline" onClick={onCancel}>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+              >
                 Cancel
-              </Button>
-              <Button type="submit" disabled={!editElement.trim()}>
+              </button>
+              <button
+                type="submit"
+                disabled={!editData.element.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90 transition-colors disabled:opacity-50"
+              >
                 Update
-              </Button>
+              </button>
             </div>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
+  // Add multiple items form
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add Items - {categoryName}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden">
+      <div className="p-6 border-b border-[#D7DDE5] bg-[#1D3C8F]">
+        <h3 className="text-lg font-semibold text-white">Add Items - {categoryName}</h3>
+      </div>
+      <div className="p-6 space-y-4">
         {items.map((item, index) => (
-          <div key={item.id} className="p-4 border rounded-lg space-y-4 bg-muted/30">
+          <div key={item.id} className="p-4 border border-[#D7DDE5] rounded-lg space-y-4 bg-[#F6F7F9]">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Item {index + 1}</span>
+              <span className="text-sm font-medium text-[#2E2E2E]/60">Item {index + 1}</span>
               {items.length > 1 && (
-                <Button
+                <button
                   type="button"
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8 text-destructive"
                   onClick={() => removeItem(item.id)}
+                  className="text-red-500 hover:text-red-700 text-sm"
                 >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                  Remove
+                </button>
               )}
             </div>
-            <div className="space-y-2">
-              <Label>Element</Label>
-              <Input
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Element</label>
+              <input
+                type="text"
                 value={item.element}
                 onChange={(e) => updateItem(item.id, "element", e.target.value)}
                 placeholder="Enter element name"
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2] bg-white"
               />
             </div>
-            <div className="space-y-2">
-              <Label>Comments</Label>
-              <Textarea
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Comments</label>
+              <textarea
                 value={item.comments}
                 onChange={(e) => updateItem(item.id, "comments", e.target.value)}
                 placeholder="Enter comments"
                 rows={2}
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#17A2A2] resize-none bg-white"
               />
             </div>
-            <div className="space-y-2">
-              <Label>Action Timeframe</Label>
-              <Select value={item.timeframe} onValueChange={(v) => updateItem(item.id, "timeframe", v)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeframes.map((tf) => (
-                    <SelectItem key={tf.value} value={tf.value}>
-                      <div className="flex items-center gap-2">
-                        <span className={`w-3 h-3 rounded-full ${tf.color}`} />
+            <div>
+              <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Action Timeframe</label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setOpenDropdown(openDropdown === item.id ? null : item.id)}
+                  className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg text-left flex items-center justify-between bg-white"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: getTimeframeColor(item.timeframe) }}
+                    />
+                    {item.timeframe}
+                  </div>
+                  <span>▼</span>
+                </button>
+                {openDropdown === item.id && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-[#D7DDE5] rounded-lg shadow-lg">
+                    {TIMEFRAMES.map((tf) => (
+                      <button
+                        key={tf.value}
+                        type="button"
+                        onClick={() => updateItem(item.id, "timeframe", tf.value)}
+                        className="w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-[#F6F7F9]"
+                      >
+                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: tf.color }} />
                         {tf.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
 
-        <Button type="button" variant="outline" onClick={addNewItem} className="w-full gap-2 bg-transparent">
-          <Plus className="w-4 h-4" />
-          Add Another Item
-        </Button>
+        <button
+          type="button"
+          onClick={addNewItem}
+          className="w-full px-4 py-3 text-sm font-medium text-[#17A2A2] bg-white border-2 border-dashed border-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/5 transition-colors"
+        >
+          + Add Another Item
+        </button>
 
-        <div className="flex gap-3 justify-end pt-4 border-t">
-          <Button type="button" variant="outline" onClick={onCancel}>
+        <div className="flex gap-3 justify-end pt-4 border-t border-[#D7DDE5]">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+          >
             Cancel
-          </Button>
-          <Button onClick={handleDone} disabled={!items.some((item) => item.element.trim())}>
+          </button>
+          <button
+            onClick={handleDone}
+            disabled={!items.some((item) => item.element.trim())}
+            className="px-6 py-2 text-sm font-medium text-white bg-[#1D3C8F] rounded-lg hover:bg-[#1D3C8F]/90 transition-colors disabled:opacity-50"
+          >
             Done
-          </Button>
+          </button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

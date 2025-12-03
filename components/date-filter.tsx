@@ -1,47 +1,51 @@
 "use client"
 
-import { useState } from "react"
-import { Filter, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Label } from "@/components/ui/label"
-
-export interface DateFilter {
-  day?: number
-  month?: number
-  year?: number
-}
+import { useState, useRef, useEffect } from "react"
+import type { DateFilter as DateFilterType } from "@/lib/types"
 
 interface DateFilterProps {
-  onFilterChange: (filter: DateFilter) => void
-  activeFilter: DateFilter
+  onFilterChange: (filter: DateFilterType) => void
+  activeFilter: DateFilterType
 }
 
-const months = [
-  { value: 1, label: "January" },
-  { value: 2, label: "February" },
-  { value: 3, label: "March" },
-  { value: 4, label: "April" },
-  { value: 5, label: "May" },
-  { value: 6, label: "June" },
-  { value: 7, label: "July" },
-  { value: 8, label: "August" },
-  { value: 9, label: "September" },
-  { value: 10, label: "October" },
-  { value: 11, label: "November" },
-  { value: 12, label: "December" },
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ]
 
 const currentYear = new Date().getFullYear()
-const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i)
-const days = Array.from({ length: 31 }, (_, i) => i + 1)
+const YEARS = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i)
+const DAYS = Array.from({ length: 31 }, (_, i) => i + 1)
 
-export function DateFilterComponent({ onFilterChange, activeFilter }: DateFilterProps) {
+export default function DateFilter({ onFilterChange, activeFilter }: DateFilterProps) {
   const [open, setOpen] = useState(false)
   const [day, setDay] = useState<string>(activeFilter.day?.toString() || "")
   const [month, setMonth] = useState<string>(activeFilter.month?.toString() || "")
   const [year, setYear] = useState<string>(activeFilter.year?.toString() || "")
+  const [openSelect, setOpenSelect] = useState<string | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false)
+        setOpenSelect(null)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   const applyFilter = () => {
     onFilterChange({
@@ -63,81 +67,134 @@ export function DateFilterComponent({ onFilterChange, activeFilter }: DateFilter
   const hasActiveFilter = activeFilter.day || activeFilter.month || activeFilter.year
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="gap-2 bg-transparent">
-          <Filter className="w-4 h-4" />
-          Filter
-          {hasActiveFilter && (
-            <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-              !
-            </span>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80" align="end">
-        <div className="space-y-4">
-          <div className="font-medium">Filter by Date</div>
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors flex items-center gap-2"
+      >
+        🔍 Filter
+        {hasActiveFilter && <span className="w-2 h-2 rounded-full bg-[#17A2A2]" />}
+      </button>
 
-          <div className="space-y-2">
-            <Label>Day</Label>
-            <Select value={day} onValueChange={setDay}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select day" />
-              </SelectTrigger>
-              <SelectContent>
-                {days.map((d) => (
-                  <SelectItem key={d} value={d.toString()}>
-                    {d}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+      {open && (
+        <div className="absolute right-0 z-20 mt-2 w-80 bg-white border border-[#D7DDE5] rounded-xl shadow-lg p-4 space-y-4">
+          <div className="font-semibold text-[#1D3C8F]">Filter by Date</div>
+
+          {/* Day Select */}
+          <div>
+            <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Day</label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setOpenSelect(openSelect === "day" ? null : "day")}
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg text-left flex items-center justify-between bg-white"
+              >
+                <span className={day ? "text-[#2E2E2E]" : "text-[#2E2E2E]/40"}>{day || "Select day"}</span>
+                <span>▼</span>
+              </button>
+              {openSelect === "day" && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-[#D7DDE5] rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {DAYS.map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => {
+                        setDay(d.toString())
+                        setOpenSelect(null)
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-[#F6F7F9]"
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Month</Label>
-            <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select month" />
-              </SelectTrigger>
-              <SelectContent>
-                {months.map((m) => (
-                  <SelectItem key={m.value} value={m.value.toString()}>
-                    {m.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Month Select */}
+          <div>
+            <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Month</label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setOpenSelect(openSelect === "month" ? null : "month")}
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg text-left flex items-center justify-between bg-white"
+              >
+                <span className={month ? "text-[#2E2E2E]" : "text-[#2E2E2E]/40"}>
+                  {month ? MONTHS[Number.parseInt(month) - 1] : "Select month"}
+                </span>
+                <span>▼</span>
+              </button>
+              {openSelect === "month" && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-[#D7DDE5] rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {MONTHS.map((m, i) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => {
+                        setMonth((i + 1).toString())
+                        setOpenSelect(null)
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-[#F6F7F9]"
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Year</Label>
-            <Select value={year} onValueChange={setYear}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select year" />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((y) => (
-                  <SelectItem key={y} value={y.toString()}>
-                    {y}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Year Select */}
+          <div>
+            <label className="block text-sm font-medium text-[#2E2E2E] mb-2">Year</label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setOpenSelect(openSelect === "year" ? null : "year")}
+                className="w-full px-4 py-2 border border-[#D7DDE5] rounded-lg text-left flex items-center justify-between bg-white"
+              >
+                <span className={year ? "text-[#2E2E2E]" : "text-[#2E2E2E]/40"}>{year || "Select year"}</span>
+                <span>▼</span>
+              </button>
+              {openSelect === "year" && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-[#D7DDE5] rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {YEARS.map((y) => (
+                    <button
+                      key={y}
+                      type="button"
+                      onClick={() => {
+                        setYear(y.toString())
+                        setOpenSelect(null)
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-[#F6F7F9]"
+                    >
+                      {y}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
+          {/* Buttons */}
           <div className="flex gap-2 pt-2">
-            <Button variant="outline" onClick={clearFilter} className="flex-1 gap-2 bg-transparent">
-              <X className="w-4 h-4" />
+            <button
+              onClick={clearFilter}
+              className="flex-1 px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] transition-colors"
+            >
               Clear
-            </Button>
-            <Button onClick={applyFilter} className="flex-1">
-              Apply Filter
-            </Button>
+            </button>
+            <button
+              onClick={applyFilter}
+              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90 transition-colors"
+            >
+              Apply
+            </button>
           </div>
         </div>
-      </PopoverContent>
-    </Popover>
+      )}
+    </div>
   )
 }
