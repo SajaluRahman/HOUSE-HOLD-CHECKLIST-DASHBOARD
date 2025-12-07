@@ -95,7 +95,7 @@ export default function AuditTable({ items, categoryId, categoryName, onToggleSt
                       <button
                         onClick={() => onToggleStatus(categoryId, item.id, "checked")}
                         className={`w-10 h-10 rounded-xl flex justify-center items-center text-lg font-bold transition ${
-                          isChecked ? "bg-[#17A2A2] text-white shadow-md" : "border-2 border-gray-300 hover:border-[#17A2A2]"
+                          isChecked ? "bg-[#17A2A2] text-white shadow-lg" : "border-2 border-gray-300 hover:border-[#17A2A2]"
                         }`}
                       >
                         <Check />
