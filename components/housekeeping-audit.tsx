@@ -211,21 +211,92 @@ const [exporting, setExporting] = useState(false);
         />
       )}
 
-      {showItemForm && selectedCategoryId && (
-        <AuditItemForm
-          onSubmitMultiple={handleAddItems}
-          onSubmitSingle={handleEditItem}
-          onCancel={() => {
-            setShowItemForm(false)
-            setEditingItem(null)
+    {showItemForm && selectedCategoryId && (
+  <>
+    {/* Add New Items - Only Element */}
+    {!editingItem && (
+      <AuditItemForm
+        categoryName={categories.find((c) => c.id === selectedCategoryId)?.name || ""}
+        onAdd={(elements: string[]) => {
+          const newItems: AuditItem[] = elements.map((el) => ({
+            id: crypto.randomUUID(),
+            categoryId: selectedCategoryId,
+            element: el.trim(),
+            comments: "",
+            timeframe: "Open" as const,
+            status: "pending" as const,
+            createdAt: new Date().toISOString(),
+          }))
+
+          setCategories((prev) =>
+            prev.map((cat) =>
+              cat.id === selectedCategoryId
+                ? { ...cat, items: [...cat.items, ...newItems] }
+                : cat
+            )
+          )
+          setShowItemForm(false)
+        }}
+        onCancel={() => {
+          setShowItemForm(false)
+          setEditingItem(null)
+        }}
+      />
+    )}
+
+    {/* Edit Existing Item (Element Only) */}
+    {editingItem && (
+      <div className="bg-white border border-[#D7DDE5] rounded-xl p-6 shadow-lg">
+        <h3 className="text-lg font-semibold text-[#1D3C8F] mb-4">
+          Edit Item — {categories.find((c) => c.id === selectedCategoryId)?.name}
+        </h3>
+        <input
+          type="text"
+          defaultValue={editingItem.element}
+          autoFocus
+          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:border-[#17A2A2] focus:outline-none text-lg mb-4"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const newElement = e.currentTarget.value.trim()
+              if (newElement) {
+                setCategories((prev) =>
+                  prev.map((cat) =>
+                    cat.id === selectedCategoryId
+                      ? {
+                          ...cat,
+                          items: cat.items.map((i) =>
+                            i.id === editingItem.id ? { ...i, element: newElement } : i
+                          ),
+                        }
+                      : cat
+                  )
+                )
+                setEditingItem(null)
+                setShowItemForm(false)
+              }
+            }
+            if (e.key === "Escape") {
+              setEditingItem(null)
+              setShowItemForm(false)
+            }
           }}
-          initialData={editingItem}
-          categoryName={
-            categories.find((c) => c.id === selectedCategoryId)?.name || ""
-          }
-          isEditing={!!editingItem}
         />
-      )}
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={() => {
+              setEditingItem(null)
+              setShowItemForm(false)
+            }}
+            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+        </div>
+        <p className="text-sm text-gray-500 mt-3">Press Enter to save • Esc to cancel</p>
+      </div>
+    )}
+  </>
+)}
 
       {/* Content */}
       {categories.length === 0 ? (
@@ -275,12 +346,27 @@ const [exporting, setExporting] = useState(false);
                 </div>
 
                 <div className="p-6">
-                  <AuditTable
-                    items={category.items}
-                    categoryId={category.id}
-                    onToggleStatus={handleToggleStatus}
-                    onEdit={(item) => openEditForm(category.id, item)}
-                  />
+                 <AuditTable
+  items={category.items}
+  categoryId={category.id}
+  categoryName={category.name}
+  onToggleStatus={handleToggleStatus}
+  onEdit={(item) => openEditForm(category.id, item)}
+  onUpdateDetails={(itemId: string, updates: { comments?: string; timeframe?: Timeframe }) => {
+    setCategories(prev =>
+      prev.map(cat =>
+        cat.id === category.id
+          ? {
+              ...cat,
+              items: cat.items.map(item =>
+                item.id === itemId ? { ...item, ...updates } : item
+              )
+            }
+          : cat
+      )
+    )
+  }}
+/>
                 </div>
               </div>
             )

@@ -7,8 +7,8 @@ export type PageType = "dashboard" | "audit" | "observations" | "users" | "setti
 export interface AuditItem {
   id: string
   element: string
-  comments: string
-  timeframe: Timeframe
+  comments?: string          // now optional
+  timeframe?: Timeframe      // now optiona
   status: ItemStatus
   createdAt: string
 }
