@@ -4,6 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { LayoutDashboard, ClipboardList, Eye, Users, Settings, LogOut, Menu, X } from "lucide-react"
 import type { PageType } from "@/lib/types"
+import { useAdminStore } from "@/store/useAdminStore";
+
 
 interface SidebarProps {
   activePage: PageType
@@ -17,14 +19,18 @@ export default function Sidebar({ activePage, setActivePage }: SidebarProps) {
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-5" /> },
     { id: "audit", label: "Housekeeping Audit", icon: <ClipboardList className="size-5" /> },
     { id: "observations", label: "Observations", icon: <Eye className="size-5" /> },
-    { id: "housekeeping-audits", label: "Housekeeping Audits", icon: <ClipboardList className="size-5" /> },
     { id: "users", label: "Users", icon: <Users className="size-5" /> },
     { id: "settings", label: "Settings", icon: <Settings className="size-5" /> },
   ]
 
-  const handleLogout = () => {
-    alert("Logout clicked - integrate your auth API here")
-  }
+ const logout = useAdminStore((state) => state.logout);
+
+const handleLogout = async () => {
+  await logout();  // 🔥 calls backend + clears state
+
+     // Optional: redirect to login page
+    window.location.href = "/login";  
+};
 
   const toggleSidebar = () => setIsOpen(!isOpen)
   const closeSidebar = () => setIsOpen(false)
@@ -41,12 +47,13 @@ export default function Sidebar({ activePage, setActivePage }: SidebarProps) {
       </button>
 
       {/* Overlay - Darkens screen when mobile menu is open */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity"
-          onClick={closeSidebar}
-        />
-      )}
+     {isOpen && (
+  <div
+    className="fixed inset-0 bg-black/40 z-30 md:hidden transition-opacity"
+    onClick={closeSidebar}
+  />
+)}
+
 
       
 

@@ -1,119 +1,202 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import CategoryForm from "@/components/category-form"
 import AuditItemForm from "@/components/audit-item-form"
 import AuditTable from "@/components/audit-table"
 import DateFilter from "@/components/date-filter"
-import { exportAuditToPDF } from "@/components/AuditPDFDocument";
-import type { Category, AuditItem, DateFilter as DateFilterType } from "@/lib/types"
+import { exportAuditToPDF } from "@/components/AuditPDFDocument"
+import { useStore } from "@/store/useStore" 
+import type { DateFilter as DateFilterType } from "@/lib/types"
+import axios from "axios"
 
-interface HousekeepingAuditProps {
-  categories: Category[]
-  setCategories: (categories: Category[]) => void
-}
+export default function HousekeepingAudit() {
+  const {
+    categories,
+    dailyAreas,
+    loadingCategories,
+    loadingDailyAreas,
+    fetchCategories,
+    fetchDailyAreas,
+    createCategory,
+    addDailyArea,
+    updateDailyStatus,
+  } = useStore()
 
-export default function HousekeepingAudit({ categories, setCategories }: HousekeepingAuditProps) {
   const [showCategoryForm, setShowCategoryForm] = useState(false)
   const [showItemForm, setShowItemForm] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
-  const [editingItem, setEditingItem] = useState<AuditItem | null>(null)
+  const [editingItem, setEditingItem] = useState<any>(null)
   const [dateFilter, setDateFilter] = useState<DateFilterType>({})
-const [exporting, setExporting] = useState(false);
-  // Add new category
-  const handleAddCategory = (name: string) => {
-    const newCategory: Category = {
-      id: Date.now().toString(),
-      name,
-      items: [],
-      createdAt: new Date().toISOString(),
-    }
-    setCategories([...categories, newCategory])
-    setSelectedCategoryId(newCategory.id)
-    setShowCategoryForm(false)
-    setShowItemForm(true)
-  }
+  const [exporting, setExporting] = useState(false)
 
-  // Add multiple items
-  const handleAddItems = (items: Omit<AuditItem, "id" | "status" | "createdAt">[]) => {
-    if (!selectedCategoryId) return
+  // NEW: Track which category needs refresh (only one table refreshes)
+  const [refreshingCategoryId, setRefreshingCategoryId] = useState<string | null>(null)
 
-    const newItems: AuditItem[] = items.map((item, index) => ({
-      ...item,
-      id: (Date.now() + index).toString(),
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    }))
+  useEffect(() => {
+    fetchCategories()
+    fetchDailyAreas()
+  }, [fetchCategories, fetchDailyAreas])
 
-    setCategories(
-      categories.map((cat) =>
-        cat.id === selectedCategoryId
-          ? { ...cat, items: [...cat.items, ...newItems] }
-          : cat
-      )
-    )
-    setShowItemForm(false)
-  }
+  const handleExport = async () => {
+  if (filteredCategories.length === 0) return;
 
-  // Edit single item
-  const handleEditItem = (item: Omit<AuditItem, "id" | "status" | "createdAt">) => {
-    if (!editingItem || !selectedCategoryId) return
-
-    setCategories(
-      categories.map((cat) =>
-        cat.id === selectedCategoryId
-          ? {
-              ...cat,
-              items: cat.items.map((i) =>
-                i.id === editingItem.id ? { ...i, ...item, status: i.status } : i
-              ),
-            }
-          : cat
-      )
-    )
-    setEditingItem(null)
-    setShowItemForm(false)
-  }
-
-  // Toggle status
-  const handleToggleStatus = (categoryId: string, itemId: string, status: "checked" | "crossed") => {
-    setCategories(
-      categories.map((cat) =>
-        cat.id === categoryId
-          ? {
-              ...cat,
-              items: cat.items.map((item) =>
-                item.id === itemId
-                  ? { ...item, status: item.status === status ? "pending" : status }
-                  : item
-              ),
-            }
-          : cat
-      )
-    )
-  }
-
-  // Placeholder for export (currently disabled / not implemented)
- const handleExport = async () => {
-  if (exporting) return;
   setExporting(true);
 
-  // Prompt the user for the extra printable fields (optional but nice)
-  const inspectedBy = prompt("Inspected by (name):")?.trim() || "";
-  const location = prompt("Base Location:")?.trim() || "";
-  const department = prompt("Ward/Unit/Department:")?.trim() || "";
-  const today = new Date();
-  const date = today.toLocaleDateString("en-GB"); // DD/MM/YYYY
-  const time = today.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
   try {
-    await exportAuditToPDF(filteredCategories, inspectedBy, date, time, location, department);
-  } catch (e) {
-    alert("PDF generation failed – check console.");
-    console.error(e);
+    // Pass the data your PDF component expects
+    await exportAuditToPDF({
+      categories: filteredCategories,
+      stats,
+      dateFilter: dateFilter.day || dateFilter.month || dateFilter.year
+        ? `${dateFilter.day ? `${dateFilter.day}/` : ''}${dateFilter.month || ''}${dateFilter.year ? `/${dateFilter.year}` : ''}`
+        : null,
+    });
+  } catch (error) {
+    console.error("PDF export failed:", error);
+    alert("Failed to generate PDF. Check console for details.");
   } finally {
     setExporting(false);
   }
+};
+
+  // Transform data — unchanged logic
+  const transformedCategories = useMemo(() => {
+    return categories.map(cat => {
+      const items = dailyAreas
+        .filter(area => area.category === cat.name)
+        .flatMap(area => 
+          area.dateStatuses.map(status => ({
+            _id: status._id, // important for key
+            categoryId: cat._id,
+            categoryName: area.category,
+            element: area.areaName,
+            comments: status.command || "",
+            timeframe: status.actionTimeframe || "Open",
+            status: status.status === "ok" ? "checked" : (status.status === "notok" ? "crossed" : "pending"),
+            createdAt: status.date || new Date().toISOString(),
+          }))
+        );
+
+      return {
+        id: cat._id,
+        name: cat.name,
+        createdAt: cat.createdAt || new Date().toISOString(),
+        items,
+      };
+    });
+  }, [categories, dailyAreas]);
+
+  const filteredCategories = useMemo(() => {
+    if (!dateFilter.day && !dateFilter.month && !dateFilter.year) {
+      return transformedCategories
+    }
+
+    return transformedCategories
+      .map(cat => ({
+        ...cat,
+        items: cat.items.filter(item => {
+          const d = new Date(item.createdAt)
+          return (
+            (!dateFilter.day || d.getDate() === dateFilter.day) &&
+            (!dateFilter.month || d.getMonth() + 1 === dateFilter.month) &&
+            (!dateFilter.year || d.getFullYear() === dateFilter.year)
+          )
+        })
+      }))
+      .filter(cat => cat.items.length > 0)
+  }, [transformedCategories, dateFilter])
+
+  const stats = useMemo(() => {
+    const all = filteredCategories.flatMap(c => c.items)
+    return {
+      total: all.length,
+      checked: all.filter(i => i.status === "checked").length,
+    }
+  }, [filteredCategories])
+
+  const handleAddCategory = async (name: string) => {
+    const res = await createCategory({ name, description: "" })
+    if (!res.error && res.data) {
+      setSelectedCategoryId(res.data._id || res.data.id)
+      setShowCategoryForm(false)
+      setShowItemForm(true)
+    }
+  }
+
+  // FIXED: Refresh only the category we added to
+  const handleAddItems = async (elements: string[]) => {
+  if (!selectedCategoryId) return;
+
+  // Start loading ONLY for this category
+  setRefreshingCategoryId(selectedCategoryId);
+
+  try {
+    const promises = elements.map(el =>
+      addDailyArea({
+        categoryId: selectedCategoryId,
+        areaName: el.trim(),
+      })
+    );
+
+    // Wait for all items to be added
+    await Promise.all(promises);
+
+    // Optional: Force refetch dailyAreas to ensure latest data
+    // (Recommended if your store doesn't auto-update properly)
+    await fetchDailyAreas();
+  } catch (error) {
+    console.error("Failed to add items:", error);
+    // Optionally show toast error
+  } finally {
+    // Now safe to stop loading — data is fresh
+    setRefreshingCategoryId(null);
+
+    setShowItemForm(false);
+    setSelectedCategoryId(null);
+  }
+};
+
+
+// Inside HousekeepingAudit.tsx → handleToggleStatus
+// Inside HousekeepingAudit.tsx → handleToggleStatus
+// REPLACE THIS ENTIRE FUNCTION in HousekeepingAudit.tsx
+const handleToggleStatus = async (areaId: string, _statusId: string, newStatus: string) => {
+  console.log("Toggling status for area:", areaId, "to:", newStatus);
+
+  // Find category for loading spinner
+  const area = dailyAreas.find(a => a._id === areaId);
+  const categoryId = typeof area?.category === "object" ? area.category._id : area?.category;
+  if (categoryId) setRefreshingCategoryId(categoryId);
+
+  // THIS IS THE KEY FIX: Send date as "YYYY-MM-DD" like Postman
+  const today = new Date();
+  const dateString = today.toISOString().split('T')[0]; // "2025-12-08"
+
+  updateDailyStatus({
+    areaId,
+    date: dateString,           // ← MUST be "2025-12-08", not full ISO
+    status: newStatus === "checked" ? "ok" : "notok",
+    completed: newStatus === "checked",
+    command: "",
+    actionTimeframe: "Open",
+  })
+    .then((res) => {
+      if (res.error) {
+        alert("Failed to update status");
+        console.error(res);
+      } else {
+        console.log("Status saved!");
+        fetchDailyAreas(); // refresh to show check/cross immediately
+      }
+    })
+    .catch((err) => {
+      console.error("Network error:", err);
+      alert("Connection failed");
+    })
+    .finally(() => {
+      setRefreshingCategoryId(null);
+    });
 };
 
   const openItemForm = (categoryId: string) => {
@@ -122,255 +205,110 @@ const [exporting, setExporting] = useState(false);
     setShowItemForm(true)
   }
 
-  const openEditForm = (categoryId: string, item: AuditItem) => {
-    setSelectedCategoryId(categoryId)
-    setEditingItem(item)
-    setShowItemForm(true)
+  if (loadingCategories || loadingDailyAreas) {
+    return <div className="p-8 text-center">Loading audit data...</div>
   }
-
-  // Filter items by date
-  const filteredCategories = useMemo(() => {
-    if (!dateFilter.day && !dateFilter.month && !dateFilter.year) {
-      return categories
-    }
-
-    return categories
-      .map((cat) => {
-        const filteredItems = cat.items.filter((item) => {
-          const d = new Date(item.createdAt)
-          return (
-            (!dateFilter.day || d.getDate() === dateFilter.day) &&
-            (!dateFilter.month || d.getMonth() + 1 === dateFilter.month) &&
-            (!dateFilter.year || d.getFullYear() === dateFilter.year)
-          )
-        })
-        return { ...cat, items: filteredItems }
-      })
-      .filter((cat) => cat.items.length > 0)
-  }, [categories, dateFilter])
-
-  const stats = useMemo(() => {
-    const all = filteredCategories.flatMap((c) => c.items)
-    return {
-      total: all.length,
-      checked: all.filter((i) => i.status === "checked").length,
-    }
-  }, [filteredCategories])
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-[#2E2E2E]">Housekeeping Audit List</h2>
-          {categories.length > 0 && (
+          {transformedCategories.length > 0 && (
             <p className="text-sm text-[#2E2E2E]/60 mt-1">
               Overall: {stats.checked} / {stats.total} completed
             </p>
           )}
         </div>
+
         <div className="flex gap-3">
           <DateFilter onFilterChange={setDateFilter} activeFilter={dateFilter} />
-          <button
-            onClick={() => setShowCategoryForm(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90"
-          >
+          <button onClick={() => setShowCategoryForm(true)} className="px-4 py-2 text-sm font-medium text-white bg-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/90">
             + Add Category
           </button>
-          {categories.length > 0 && (
-          <button
-  onClick={handleExport}
-  disabled={exporting || categories.length === 0}
-  className={`
-    px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg
-    hover:bg-[#F6F7F9] disabled:opacity-50 disabled:cursor-not-allowed
-    flex items-center gap-2
-  `}
->
-  {exporting ? (
-    <>
-      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-        <path fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-      </svg>
-      Generating…
-    </>
-  ) : (
-    "Export"
-  )}
-</button>
-          )}
+          <button onClick={handleExport} disabled={exporting || transformedCategories.length === 0} className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            {exporting ? <>Generating…</> : "Export PDF"}
+          </button>
         </div>
       </div>
 
-      {/* Forms */}
+      {/* FORMS */}
       {showCategoryForm && (
-        <CategoryForm
-          onSubmit={handleAddCategory}
-          onCancel={() => setShowCategoryForm(false)}
+        <CategoryForm onSubmit={handleAddCategory} onCancel={() => setShowCategoryForm(false)} />
+      )}
+
+      {showItemForm && selectedCategoryId && (
+        <AuditItemForm
+          categoryName={categories.find(c => c._id === selectedCategoryId)?.name || ""}
+          onAdd={handleAddItems}
+          onCancel={() => {
+            setShowItemForm(false)
+            setSelectedCategoryId(null)
+          }}
         />
       )}
 
-    {showItemForm && selectedCategoryId && (
-  <>
-    {/* Add New Items - Only Element */}
-    {!editingItem && (
-      <AuditItemForm
-        categoryName={categories.find((c) => c.id === selectedCategoryId)?.name || ""}
-        onAdd={(elements: string[]) => {
-          const newItems: AuditItem[] = elements.map((el) => ({
-            id: crypto.randomUUID(),
-            categoryId: selectedCategoryId,
-            element: el.trim(),
-            comments: "",
-            timeframe: "Open" as const,
-            status: "pending" as const,
-            createdAt: new Date().toISOString(),
-          }))
-
-          setCategories((prev) =>
-            prev.map((cat) =>
-              cat.id === selectedCategoryId
-                ? { ...cat, items: [...cat.items, ...newItems] }
-                : cat
-            )
-          )
-          setShowItemForm(false)
-        }}
-        onCancel={() => {
-          setShowItemForm(false)
-          setEditingItem(null)
-        }}
-      />
-    )}
-
-    {/* Edit Existing Item (Element Only) */}
-    {editingItem && (
-      <div className="bg-white border border-[#D7DDE5] rounded-xl p-6 shadow-lg">
-        <h3 className="text-lg font-semibold text-[#1D3C8F] mb-4">
-          Edit Item — {categories.find((c) => c.id === selectedCategoryId)?.name}
-        </h3>
-        <input
-          type="text"
-          defaultValue={editingItem.element}
-          autoFocus
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:border-[#17A2A2] focus:outline-none text-lg mb-4"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              const newElement = e.currentTarget.value.trim()
-              if (newElement) {
-                setCategories((prev) =>
-                  prev.map((cat) =>
-                    cat.id === selectedCategoryId
-                      ? {
-                          ...cat,
-                          items: cat.items.map((i) =>
-                            i.id === editingItem.id ? { ...i, element: newElement } : i
-                          ),
-                        }
-                      : cat
-                  )
-                )
-                setEditingItem(null)
-                setShowItemForm(false)
-              }
-            }
-            if (e.key === "Escape") {
-              setEditingItem(null)
-              setShowItemForm(false)
-            }
-          }}
-        />
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={() => {
-              setEditingItem(null)
-              setShowItemForm(false)
-            }}
-            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-        </div>
-        <p className="text-sm text-gray-500 mt-3">Press Enter to save • Esc to cancel</p>
-      </div>
-    )}
-  </>
-)}
-
-      {/* Content */}
-      {categories.length === 0 ? (
+      {/* MAIN CONTENT */}
+      {filteredCategories.length === 0 ? (
         <div className="bg-white border border-[#D7DDE5] rounded-xl p-12 text-center">
           <p className="text-[#2E2E2E]/60 mb-4">
-            No categories yet. Add your first category to get started.
+            {transformedCategories.length === 0 
+              ? "No categories yet. Add your first category to get started."
+              : "No items match the current filter."
+            }
           </p>
-          <button
-            onClick={() => setShowCategoryForm(true)}
-            className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9]"
-          >
-            + Add Category
-          </button>
-        </div>
-      ) : filteredCategories.length === 0 ? (
-        <div className="bg-white border border-[#D7DDE5] rounded-xl p-12 text-center">
-          <p className="text-[#2E2E2E]/60 mb-4">No items match the current filter.</p>
-          <button
-            onClick={() => setDateFilter({})}
-            className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9]"
-          >
-            Clear Filter
-          </button>
+          {transformedCategories.length === 0 && (
+            <button onClick={() => setShowCategoryForm(true)} className="px-4 py-2 text-sm font-medium text-[#2E2E2E] bg-white border border-[#D7DDE5] rounded-lg hover:bg-[#F6F7F9]">
+              + Add Category
+            </button>
+          )}
+          {transformedCategories.length > 0 && (
+            <button onClick={() => setDateFilter({})} className="mt-4 text-sm text-[#17A2A2] underline">
+              Clear Filter
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-6">
-          {filteredCategories.map((category) => {
-            const date = new Date(category.createdAt)
-            const dateStr = `${date.getDate()} ${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`
-
-            return (
-              <div
-                key={category.id}
-                className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden shadow-sm"
-              >
-                <div className="p-6 border-b border-[#D7DDE5] flex items-center justify-between bg-gradient-to-r from-[#1D3C8F]/5 to-transparent">
-                  <div>
-                    <h3 className="text-lg font-semibold text-[#1D3C8F]">{category.name}</h3>
-                    <p className="text-sm text-[#2E2E2E]/60">Created: {dateStr}</p>
-                  </div>
-                  <button
-                    onClick={() => openItemForm(category.id)}
-                    className="px-4 py-2 text-sm font-medium text-[#17A2A2] border border-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/10 transition"
-                  >
-                    + Add Item
-                  </button>
+          {filteredCategories.map(category => (
+            <div key={category.id} className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden shadow-sm">
+              <div className="p-6 border-b border-[#D7DDE5] flex items-center justify-between bg-gradient-to-r from-[#1D3C8F]/5 to-transparent">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#1D3C8F]">{category.name}</h3>
+                  <p className="text-sm text-[#2E2E2E]/60">
+                    Created: {new Date(category.createdAt).toLocaleDateString("en-GB")}
+                  </p>
                 </div>
-
-                <div className="p-6">
-                 <AuditTable
-  items={category.items}
-  categoryId={category.id}
-  categoryName={category.name}
-  onToggleStatus={handleToggleStatus}
-  onEdit={(item) => openEditForm(category.id, item)}
-  onUpdateDetails={(itemId: string, updates: { comments?: string; timeframe?: Timeframe }) => {
-    setCategories(prev =>
-      prev.map(cat =>
-        cat.id === category.id
-          ? {
-              ...cat,
-              items: cat.items.map(item =>
-                item.id === itemId ? { ...item, ...updates } : item
-              )
-            }
-          : cat
-      )
-    )
-  }}
-/>
-                </div>
+                <button
+                  onClick={() => openItemForm(category.id)}
+                  className="px-4 py-2 text-sm font-medium text-[#17A2A2] border border-[#17A2A2] rounded-lg hover:bg-[#17A2A2]/10"
+                >
+                  + Add Item
+                </button>
               </div>
-            )
-          })}
+
+              <div className="p-6">
+                <AuditTable
+                  key={`${category.id}-${refreshingCategoryId === category.id ? 'refresh' : ''}`}
+                  items={category.items}
+                  isLoading={refreshingCategoryId === category.id}   // Only this table shows loading
+                  categoryId={category.id}
+                  categoryName={category.name}
+                  onToggleStatus={handleToggleStatus}
+                  onEdit={(item) => {
+                    setSelectedCategoryId(category.id)
+                    setEditingItem(item)
+                    setShowItemForm(true)
+                  }}
+                  onUpdateDetails={(itemId, updates) => {
+                    setRefreshingCategoryId(category.id)
+                    setTimeout(() => setRefreshingCategoryId(null), 500)
+                  }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

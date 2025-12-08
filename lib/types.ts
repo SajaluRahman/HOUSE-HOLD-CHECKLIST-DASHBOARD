@@ -5,7 +5,7 @@ export type ItemStatus = "pending" | "checked" | "crossed"
 export type PageType = "dashboard" | "audit" | "observations" | "users" | "settings"
 
 export interface AuditItem {
-  id: string
+  _id: string
   element: string
   comments?: string          // now optional
   timeframe?: Timeframe      // now optiona
