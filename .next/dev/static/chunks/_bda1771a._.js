@@ -3409,7 +3409,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$
 ;
 ;
 // Get JWT from localStorage
-const getToken = ()=>localStorage.getItem("adminToken");
+const getToken = ()=>{
+    const match = document.cookie.match(/(?:^|; )adminToken=([^;]*)/);
+    return match ? match[1] : null;
+};
 // Helper to include token in headers
 const withAuth = (options = {})=>{
     const token = getToken();

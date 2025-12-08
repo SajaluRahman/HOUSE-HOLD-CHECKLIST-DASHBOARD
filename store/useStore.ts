@@ -10,7 +10,11 @@ import {
 } from "@/api"; // adjust path to your api file
 
 // Get JWT from localStorage
-const getToken = () => localStorage.getItem("adminToken");
+const getToken = () => {
+  const match = document.cookie.match(/(?:^|; )adminToken=([^;]*)/);
+  return match ? match[1] : null;
+};
+
 
 // Helper to include token in headers
 const withAuth = (options: RequestInit = {}) => {
