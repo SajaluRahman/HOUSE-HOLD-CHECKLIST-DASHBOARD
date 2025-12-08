@@ -131,6 +131,8 @@ export default function AuditTable({
           </thead>
           <tbody>
             {items.map((item) => {
+              console.log("ITEM DEBUG:", item);
+
               const date = formatDate(item.createdAt);
               const isChecked = item.status === "checked";
               const isCrossed = item.status === "crossed";

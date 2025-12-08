@@ -1938,6 +1938,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
                             children: items.map((item)=>{
+                                console.log("ITEM DEBUG:", item);
                                 const date = formatDate(item.createdAt);
                                 const isChecked = item.status === "checked";
                                 const isCrossed = item.status === "crossed";
@@ -1958,13 +1959,13 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                                 children: date.month
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/audit-table.tsx",
-                                                                lineNumber: 147,
+                                                                lineNumber: 149,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 145,
+                                                        lineNumber: 147,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1972,18 +1973,18 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: date.year
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 149,
+                                                        lineNumber: 151,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 144,
+                                                lineNumber: 146,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 143,
+                                            lineNumber: 145,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1991,7 +1992,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                             children: item.element
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 153,
+                                            lineNumber: 155,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2004,19 +2005,19 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                 children: item.timeframe
                                             }, void 0, false, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 163,
+                                                lineNumber: 165,
                                                 columnNumber: 23
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "text-gray-400 text-sm italic",
                                                 children: "No details yet"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 170,
+                                                lineNumber: 172,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 161,
+                                            lineNumber: 163,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2027,7 +2028,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     children: "Check"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 175,
+                                                    lineNumber: 177,
                                                     columnNumber: 35
                                                 }, this),
                                                 isCrossed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2035,7 +2036,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     children: "Cross"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 176,
+                                                    lineNumber: 178,
                                                     columnNumber: 35
                                                 }, this),
                                                 !isChecked && !isCrossed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2043,13 +2044,13 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     children: "—"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 177,
+                                                    lineNumber: 179,
                                                     columnNumber: 50
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 174,
+                                            lineNumber: 176,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2065,12 +2066,12 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                             className: "w-5 h-5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/audit-table.tsx",
-                                                            lineNumber: 191,
+                                                            lineNumber: 193,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 182,
+                                                        lineNumber: 184,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2080,7 +2081,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: "X"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 194,
+                                                        lineNumber: 196,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2090,7 +2091,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: "i"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 206,
+                                                        lineNumber: 208,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2100,24 +2101,24 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: "Edit"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 218,
+                                                        lineNumber: 220,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 181,
+                                                lineNumber: 183,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 180,
+                                            lineNumber: 182,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, item._id, true, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 139,
+                                    lineNumber: 141,
                                     columnNumber: 17
                                 }, this);
                             })
@@ -2136,7 +2137,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Total Completed"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 233,
+                                        lineNumber: 235,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2148,23 +2149,23 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 236,
+                                        lineNumber: 238,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {}, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 239,
+                                        lineNumber: 241,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/audit-table.tsx",
-                                lineNumber: 232,
+                                lineNumber: 234,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/audit-table.tsx",
-                            lineNumber: 231,
+                            lineNumber: 233,
                             columnNumber: 11
                         }, this)
                     ]
@@ -2191,7 +2192,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                 }
             }, void 0, false, {
                 fileName: "[project]/components/audit-table.tsx",
-                lineNumber: 247,
+                lineNumber: 249,
                 columnNumber: 9
             }, this)
         ]
@@ -3512,6 +3513,7 @@ const useStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_module
             let totalPages = 1;
             do {
                 const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])(`/task/getall?page=${page}`, withAuth());
+                console.log("Fetched daily areas page", page, "response:", res);
                 if (res.error) break;
                 const items = Array.isArray(res.data) ? res.data : [];
                 allItems = [
@@ -3578,7 +3580,7 @@ const useStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_module
         },
         // ✅ FULLY FIXED updateDailyStatus
         // stores/useStore.ts → replace the whole updateDailyStatus with this:
-        updateDailyStatus: async ({ areaId, date, status, command = "", actionTimeframe = "Open", completed = status === "ok", signature = "", followUp = "" })=>{
+        updateDailyStatus: async ({ areaId, date = "02/02/2024", status, command = "", actionTimeframe = "Open", completed = status === "ok", signature = "", followUp = "" })=>{
             try {
                 console.log("Sending to backend:", {
                     areaId,
@@ -3839,23 +3841,17 @@ function HousekeepingAudit() {
     // FIXED: Refresh only the category we added to
     const handleAddItems = async (elements)=>{
         if (!selectedCategoryId) return;
-        // Start loading ONLY for this category
         setRefreshingCategoryId(selectedCategoryId);
         try {
             const promises = elements.map((el)=>addDailyArea({
-                    categoryId: selectedCategoryId,
+                    category: selectedCategoryId,
                     areaName: el.trim()
                 }));
-            // Wait for all items to be added
             await Promise.all(promises);
-            // Optional: Force refetch dailyAreas to ensure latest data
-            // (Recommended if your store doesn't auto-update properly)
             await fetchDailyAreas();
         } catch (error) {
             console.error("Failed to add items:", error);
-        // Optionally show toast error
         } finally{
-            // Now safe to stop loading — data is fresh
             setRefreshingCategoryId(null);
             setShowItemForm(false);
             setSelectedCategoryId(null);
@@ -3864,36 +3860,27 @@ function HousekeepingAudit() {
     // Inside HousekeepingAudit.tsx → handleToggleStatus
     // Inside HousekeepingAudit.tsx → handleToggleStatus
     // REPLACE THIS ENTIRE FUNCTION in HousekeepingAudit.tsx
-    const handleToggleStatus = async (areaId, _statusId, newStatus)=>{
-        console.log("Toggling status for area:", areaId, "to:", newStatus);
-        // Find category for loading spinner
-        const area = dailyAreas.find((a)=>a._id === areaId);
-        const categoryId = typeof area?.category === "object" ? area.category._id : area?.category;
-        if (categoryId) setRefreshingCategoryId(categoryId);
-        // THIS IS THE KEY FIX: Send date as "YYYY-MM-DD" like Postman
-        const today = new Date();
-        const dateString = today.toISOString().split('T')[0]; // "2025-12-08"
-        updateDailyStatus({
+    // Replace your existing handler with this
+    const handleToggleStatus = async (statusId, newStatus)=>{
+        // 1️⃣ Find the area that contains the dateStatus
+        const area = dailyAreas.find((a)=>a.dateStatuses?.some((s)=>s._id === statusId));
+        if (!area) {
+            console.error("Area not found");
+            return;
+        }
+        // 2️⃣ The correct areaId to send to backend
+        const areaId = area._id;
+        const dateString = new Date().toISOString().split("T")[0];
+        const res = await updateDailyStatus({
             areaId,
             date: dateString,
-            status: newStatus === "checked" ? "ok" : "notok",
-            completed: newStatus === "checked",
+            status: newStatus === "checked" ? "ok" : "pending",
             command: "",
-            actionTimeframe: "Open"
-        }).then((res)=>{
-            if (res.error) {
-                alert("Failed to update status");
-                console.error(res);
-            } else {
-                console.log("Status saved!");
-                fetchDailyAreas(); // refresh to show check/cross immediately
-            }
-        }).catch((err)=>{
-            console.error("Network error:", err);
-            alert("Connection failed");
-        }).finally(()=>{
-            setRefreshingCategoryId(null);
+            actionTimeframe: "open",
+            completed: newStatus === "checked"
         });
+        console.log("Status updated:", res);
+        await fetchDailyAreas();
     };
     const openItemForm = (categoryId)=>{
         setSelectedCategoryId(categoryId);
@@ -3906,7 +3893,7 @@ function HousekeepingAudit() {
             children: "Loading audit data..."
         }, void 0, false, {
             fileName: "[project]/components/housekeeping-audit.tsx",
-            lineNumber: 209,
+            lineNumber: 197,
             columnNumber: 12
         }, this);
     }
@@ -3923,7 +3910,7 @@ function HousekeepingAudit() {
                                 children: "Housekeeping Audit List"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 217,
+                                lineNumber: 205,
                                 columnNumber: 11
                             }, this),
                             transformedCategories.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3937,13 +3924,13 @@ function HousekeepingAudit() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 219,
+                                lineNumber: 207,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 216,
+                        lineNumber: 204,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3954,7 +3941,7 @@ function HousekeepingAudit() {
                                 activeFilter: dateFilter
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 226,
+                                lineNumber: 214,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3963,7 +3950,7 @@ function HousekeepingAudit() {
                                 children: "+ Add Category"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 227,
+                                lineNumber: 215,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3975,19 +3962,19 @@ function HousekeepingAudit() {
                                 }, void 0, false) : "Export PDF"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 230,
+                                lineNumber: 218,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 225,
+                        lineNumber: 213,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 215,
+                lineNumber: 203,
                 columnNumber: 7
             }, this),
             showCategoryForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$category$2d$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3995,7 +3982,7 @@ function HousekeepingAudit() {
                 onCancel: ()=>setShowCategoryForm(false)
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 238,
+                lineNumber: 226,
                 columnNumber: 9
             }, this),
             showItemForm && selectedCategoryId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$audit$2d$item$2d$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4007,7 +3994,7 @@ function HousekeepingAudit() {
                 }
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 242,
+                lineNumber: 230,
                 columnNumber: 9
             }, this),
             filteredCategories.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4018,7 +4005,7 @@ function HousekeepingAudit() {
                         children: transformedCategories.length === 0 ? "No categories yet. Add your first category to get started." : "No items match the current filter."
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 255,
+                        lineNumber: 243,
                         columnNumber: 11
                     }, this),
                     transformedCategories.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4027,7 +4014,7 @@ function HousekeepingAudit() {
                         children: "+ Add Category"
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 262,
+                        lineNumber: 250,
                         columnNumber: 13
                     }, this),
                     transformedCategories.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4036,13 +4023,13 @@ function HousekeepingAudit() {
                         children: "Clear Filter"
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 267,
+                        lineNumber: 255,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 254,
+                lineNumber: 242,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-6",
@@ -4059,7 +4046,7 @@ function HousekeepingAudit() {
                                                 children: category.name
                                             }, void 0, false, {
                                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                                lineNumber: 278,
+                                                lineNumber: 267,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4070,13 +4057,13 @@ function HousekeepingAudit() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                                lineNumber: 279,
+                                                lineNumber: 268,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/housekeeping-audit.tsx",
-                                        lineNumber: 277,
+                                        lineNumber: 266,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4085,13 +4072,13 @@ function HousekeepingAudit() {
                                         children: "+ Add Item"
                                     }, void 0, false, {
                                         fileName: "[project]/components/housekeeping-audit.tsx",
-                                        lineNumber: 283,
+                                        lineNumber: 272,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 276,
+                                lineNumber: 265,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4113,29 +4100,29 @@ function HousekeepingAudit() {
                                     }
                                 }, `${category.id}-${refreshingCategoryId === category.id ? 'refresh' : ''}`, false, {
                                     fileName: "[project]/components/housekeeping-audit.tsx",
-                                    lineNumber: 292,
+                                    lineNumber: 281,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 291,
+                                lineNumber: 280,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, category.id, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 275,
+                        lineNumber: 264,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 273,
+                lineNumber: 261,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/housekeeping-audit.tsx",
-        lineNumber: 213,
+        lineNumber: 201,
         columnNumber: 5
     }, this);
 }

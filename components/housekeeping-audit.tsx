@@ -125,33 +125,26 @@ export default function HousekeepingAudit() {
   }
 
   // FIXED: Refresh only the category we added to
-  const handleAddItems = async (elements: string[]) => {
+const handleAddItems = async (elements: string[]) => {
   if (!selectedCategoryId) return;
 
-  // Start loading ONLY for this category
   setRefreshingCategoryId(selectedCategoryId);
 
   try {
     const promises = elements.map(el =>
       addDailyArea({
-        categoryId: selectedCategoryId,
+        category: selectedCategoryId,   // ✅ FIXED
         areaName: el.trim(),
       })
     );
 
-    // Wait for all items to be added
     await Promise.all(promises);
 
-    // Optional: Force refetch dailyAreas to ensure latest data
-    // (Recommended if your store doesn't auto-update properly)
     await fetchDailyAreas();
   } catch (error) {
     console.error("Failed to add items:", error);
-    // Optionally show toast error
   } finally {
-    // Now safe to stop loading — data is fresh
     setRefreshingCategoryId(null);
-
     setShowItemForm(false);
     setSelectedCategoryId(null);
   }
@@ -161,43 +154,38 @@ export default function HousekeepingAudit() {
 // Inside HousekeepingAudit.tsx → handleToggleStatus
 // Inside HousekeepingAudit.tsx → handleToggleStatus
 // REPLACE THIS ENTIRE FUNCTION in HousekeepingAudit.tsx
-const handleToggleStatus = async (areaId: string, _statusId: string, newStatus: string) => {
-  console.log("Toggling status for area:", areaId, "to:", newStatus);
+// Replace your existing handler with this
+const handleToggleStatus = async (statusId: string, newStatus: string) => {
+  // 1️⃣ Find the area that contains the dateStatus
+  const area = dailyAreas.find(a =>
+    a.dateStatuses?.some(s => s._id === statusId)
+  );
 
-  // Find category for loading spinner
-  const area = dailyAreas.find(a => a._id === areaId);
-  const categoryId = typeof area?.category === "object" ? area.category._id : area?.category;
-  if (categoryId) setRefreshingCategoryId(categoryId);
+  if (!area) {
+    console.error("Area not found");
+    return;
+  }
 
-  // THIS IS THE KEY FIX: Send date as "YYYY-MM-DD" like Postman
-  const today = new Date();
-  const dateString = today.toISOString().split('T')[0]; // "2025-12-08"
+  // 2️⃣ The correct areaId to send to backend
+  const areaId = area._id;
 
-  updateDailyStatus({
-    areaId,
-    date: dateString,           // ← MUST be "2025-12-08", not full ISO
-    status: newStatus === "checked" ? "ok" : "notok",
-    completed: newStatus === "checked",
+  const dateString = new Date().toISOString().split("T")[0];
+
+  const res = await updateDailyStatus({
+    areaId,             // <-- send _id as areaId
+    date: dateString,
+    status: newStatus === "checked" ? "ok" : "pending",
     command: "",
-    actionTimeframe: "Open",
-  })
-    .then((res) => {
-      if (res.error) {
-        alert("Failed to update status");
-        console.error(res);
-      } else {
-        console.log("Status saved!");
-        fetchDailyAreas(); // refresh to show check/cross immediately
-      }
-    })
-    .catch((err) => {
-      console.error("Network error:", err);
-      alert("Connection failed");
-    })
-    .finally(() => {
-      setRefreshingCategoryId(null);
-    });
+    actionTimeframe: "open",
+    completed: newStatus === "checked",
+  });
+
+  console.log("Status updated:", res);
+
+  await fetchDailyAreas();
 };
+
+
 
   const openItemForm = (categoryId: string) => {
     setSelectedCategoryId(categoryId)
@@ -272,6 +260,7 @@ const handleToggleStatus = async (areaId: string, _statusId: string, newStatus: 
       ) : (
         <div className="space-y-6">
           {filteredCategories.map(category => (
+            
             <div key={category.id} className="bg-white border border-[#D7DDE5] rounded-xl overflow-hidden shadow-sm">
               <div className="p-6 border-b border-[#D7DDE5] flex items-center justify-between bg-gradient-to-r from-[#1D3C8F]/5 to-transparent">
                 <div>

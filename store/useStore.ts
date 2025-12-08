@@ -39,7 +39,7 @@ export type Category = {
 };
 
 export type DailyArea = {
-  areaId: string;
+ 
   _id: string;
   category: string | Category;
   areaName: string;
@@ -182,6 +182,7 @@ export const useStore = create<useStore>()(
 
       do {
         const res = await getRequest(`/task/getall?page=${page}`, withAuth());
+        console.log("Fetched daily areas page", page, "response:", res);
 
         if (res.error) break;
 
@@ -248,7 +249,7 @@ export const useStore = create<useStore>()(
 // stores/useStore.ts → replace the whole updateDailyStatus with this:
 updateDailyStatus: async ({
   areaId,
-  date,
+  date="02/02/2024",
   status,
   command = "",
   actionTimeframe = "Open",
