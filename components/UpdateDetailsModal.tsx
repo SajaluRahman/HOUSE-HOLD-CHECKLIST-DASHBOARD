@@ -1,34 +1,60 @@
-// components/UpdateDetailsModal.tsx
-"use client"
+import { useState } from "react";
+import { useStore } from "@/store/useStore";
 
-import { useState } from "react"
-
-type Timeframe = "Immediate" | "Urgent" | "Ongoing" | "Open"
+type Timeframe = "immediate" | "urgent" | "ongoing" | "open";
 
 const TIMEFRAMES = [
-  { value: "Immediate" as const, label: "Immediate", color: "#DC2626" },
-  { value: "Urgent" as const,   label: "Urgent",   color: "#F59E0B" },
-  { value: "Ongoing" as const,  label: "Ongoing",  color: "#10B981" },
-  { value: "Open" as const,     label: "Open",     color: "#3B82F6" },
-]
+  { value: "immediate" as const, label: "Immediate", color: "#DC2626" },
+  { value: "urgent" as const, label: "Urgent", color: "#F59E0B" },
+  { value: "ongoing" as const, label: "Ongoing", color: "#10B981" },
+  { value: "open" as const, label: "Open", color: "#3B82F6" },
+];
 
 interface Props {
-  item: { id: string; element: string; comments?: string; timeframe?: Timeframe }
-  isOpen: boolean
-  onClose: () => void
-  onSave: (comments: string, timeframe: Timeframe) => void
+  item: { 
+    _id: string;
+    categoryId: string;
+    element: string;
+    createdAt: string;
+    command?: string;
+    timeframe?: Timeframe;
+  };
+  isOpen: boolean;
+  onClose: () => void;
+  setLoadingItem: (id: string | null) => void; // NEW: pass loading state to parent
 }
 
-export default function UpdateDetailsModal({ item, isOpen, onClose, onSave }: Props) {
-  const [comments, setComments] = useState(item.comments || "")
-  const [timeframe, setTimeframe] = useState<Timeframe>(item.timeframe || "Open")
+export default function UpdateDetailsModal({ item, isOpen, onClose, setLoadingItem }: Props) {
+  const [command, setComments] = useState(item.command || "");
+  const [timeframe, setTimeframe] = useState<Timeframe>(item.timeframe || "open");
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
-  const handleSave = () => {
-    onSave(comments.trim(), timeframe)
-    onClose()
-  }
+  const handleSave = async () => {
+    const payload = {
+      id: item._id,
+      categoryId: item.categoryId,
+      areaName: item.element,
+      date: item.createdAt,
+      command: command.trim(),
+      actionTimeframe: timeframe,
+    
+    };
+
+    // Set loading for this item only
+    setLoadingItem(item._id);
+
+    try {
+      await useStore.getState().updateDailyStatus(payload);
+      await useStore.getState().fetchDailyAreas(); // refresh store data
+    } catch (err) {
+      console.error("Failed to update daily status:", err);
+    } finally {
+      // Stop loading
+      setLoadingItem(null);
+      onClose();
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -37,12 +63,11 @@ export default function UpdateDetailsModal({ item, isOpen, onClose, onSave }: Pr
           <h3 className="text-xl font-bold">Update Details</h3>
           <p className="opacity-90 mt-1 text-sm">{item.element}</p>
         </div>
-
         <div className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Comments / Action Required</label>
             <textarea
-              value={comments}
+              value={command}
               onChange={(e) => setComments(e.target.value)}
               rows={4}
               placeholder="e.g., Replace broken tile, repaint wall, fix leak..."
@@ -77,13 +102,15 @@ export default function UpdateDetailsModal({ item, isOpen, onClose, onSave }: Pr
             </button>
             <button
               onClick={handleSave}
-              className="px-8 py-3 bg-[#17A2A2] text-white rounded-xl hover:bg-[#17A2A2]/90 font-semibold shadow-lg"
+              className="px-8 py-3 bg-[#17A2A2] text-white rounded-xl hover:bg-[#17A2A2]/90 font-semibold shadow-lg flex items-center gap-2"
             >
-              Save Details
+              {/* Simple inline loader */}
+              <span>Save Details</span>
+              {/** Optionally, show a spinner here if loading */}
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

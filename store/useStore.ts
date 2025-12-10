@@ -8,6 +8,7 @@ import {
   putRequest,
   deleteRequest,
 } from "@/api"; // adjust path to your api file
+import { all } from "axios";
 
 // Get JWT from localStorage
 const getToken = () => {
@@ -71,7 +72,8 @@ type useStore = {
 
   // ✅ FIXED TYPE
   updateDailyStatus: (data: {
-    areaId: string;
+    categoryId: string;
+    areaName: string;
     date: string;
     status: "ok" | "notok";
     command?: string;
@@ -123,6 +125,8 @@ export const useStore = create<useStore>()(
 
         const categories = Array.isArray(res.categories) ? res.categories : [];
         allCategories = [...allCategories, ...categories];
+        console.log("sajalu" ,allCategories);
+
 
         totalPages = res.totalPages || 1;
         page++;
@@ -233,22 +237,13 @@ export const useStore = create<useStore>()(
       return res;
     },
 
-    editDailyArea: async (id, data) => {
-      const res = await patchRequest({ url: "/task/edit-area", data: { id, ...data }, options: withAuth() });
-      if (!res.error) {
-        set((state) => ({
-          dailyAreas: state.dailyAreas.map((area) =>
-            area._id === id ? { ...area, ...data } : area
-          ),
-        }));
-      }
-      return res;
-    },
+   
 
     // ✅ FULLY FIXED updateDailyStatus
 // stores/useStore.ts → replace the whole updateDailyStatus with this:
 updateDailyStatus: async ({
-  areaId,
+  categoryId,
+  areaName,
   date="02/02/2024",
   status,
   command = "",
@@ -258,12 +253,13 @@ updateDailyStatus: async ({
   followUp = "",
 }) => {
   try {
-    console.log("Sending to backend:", { areaId, date, status, completed });
+    console.log("Sending to backend:", { categoryId,areaName, date, status, completed });
 
     const res = await postRequest({
       url: "/task/update-status",   // ← keep this for now
       data: {
-        areaId,
+        categoryId,
+        areaName,
         date,
         status,
         command,
@@ -277,6 +273,9 @@ updateDailyStatus: async ({
 
     // THIS WILL SHOW YOU THE TRUTH
     console.log("Backend response:", res);
+//     console.log("Received actionTimeframe:", req.body.actionTimeframe);
+// console.log("Allowed enums:", DailyStatusSchema.path("dateStatuses.0.actionTimeframe").enumValues);
+
 
     if (!res.error && res.data) {
       set((state) => ({

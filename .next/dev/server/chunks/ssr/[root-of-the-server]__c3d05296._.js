@@ -1351,6 +1351,441 @@ function SimpleAddForm({ categoryName, onAdd, onCancel }) {
     }, this);
 }
 }),
+"[externals]/util [external] (util, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("util", () => require("util"));
+
+module.exports = mod;
+}),
+"[externals]/stream [external] (stream, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("stream", () => require("stream"));
+
+module.exports = mod;
+}),
+"[externals]/path [external] (path, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("path", () => require("path"));
+
+module.exports = mod;
+}),
+"[externals]/http [external] (http, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("http", () => require("http"));
+
+module.exports = mod;
+}),
+"[externals]/https [external] (https, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("https", () => require("https"));
+
+module.exports = mod;
+}),
+"[externals]/url [external] (url, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("url", () => require("url"));
+
+module.exports = mod;
+}),
+"[externals]/fs [external] (fs, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("fs", () => require("fs"));
+
+module.exports = mod;
+}),
+"[externals]/crypto [external] (crypto, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("crypto", () => require("crypto"));
+
+module.exports = mod;
+}),
+"[externals]/http2 [external] (http2, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("http2", () => require("http2"));
+
+module.exports = mod;
+}),
+"[externals]/assert [external] (assert, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("assert", () => require("assert"));
+
+module.exports = mod;
+}),
+"[externals]/zlib [external] (zlib, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("zlib", () => require("zlib"));
+
+module.exports = mod;
+}),
+"[externals]/events [external] (events, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("events", () => require("events"));
+
+module.exports = mod;
+}),
+"[project]/api/index.ts [app-ssr] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+// @/api/index.ts  ← THIS IS THE WINNING VERSION
+__turbopack_context__.s([
+    "deleteRequest",
+    ()=>deleteRequest,
+    "getRequest",
+    ()=>getRequest,
+    "patchRequest",
+    ()=>patchRequest,
+    "postRequest",
+    ()=>postRequest,
+    "putRequest",
+    ()=>putRequest
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/axios/lib/axios.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$const$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/api/const.tsx [app-ssr] (ecmascript)");
+;
+;
+const axiosInstance = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].create({
+    baseURL: __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$const$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["baseUrl"],
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
+const getRequest = async (url)=>{
+    try {
+        const res = await axiosInstance.get(url);
+        return res.data;
+    } catch (err) {
+        return {
+            error: true,
+            message: err.response?.data?.message || err.message
+        };
+    }
+};
+const postRequest = async ({ url, data })=>{
+    try {
+        const res = await axiosInstance.post(url, data);
+        return res.data;
+    } catch (err) {
+        console.error("postRequest error:", err.response?.data || err.message);
+        return {
+            error: true,
+            message: err.response?.data?.message || err.message
+        };
+    }
+};
+const patchRequest = async ({ url, data })=>{
+    try {
+        return (await axiosInstance.patch(url, data)).data;
+    } catch (err) {
+        return {
+            error: true,
+            message: err.response?.data?.message || err.message
+        };
+    }
+};
+const putRequest = async ({ url, data })=>{
+    try {
+        return (await axiosInstance.put(url, data)).data;
+    } catch (err) {
+        return {
+            error: true,
+            message: err.response?.data?.message || err.message
+        };
+    }
+};
+const deleteRequest = async (url)=>{
+    try {
+        return (await axiosInstance.delete(url)).data;
+    } catch (err) {
+        return {
+            error: true,
+            message: err.response?.data?.message || err.message
+        };
+    }
+};
+;
+}),
+"[project]/store/useStore.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// stores/useStore.ts
+__turbopack_context__.s([
+    "useStore",
+    ()=>useStore
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$react$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/zustand/esm/react.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/zustand/esm/middleware.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/api/index.ts [app-ssr] (ecmascript) <locals>"); // adjust path to your api file
+;
+;
+;
+// Get JWT from localStorage
+const getToken = ()=>{
+    const match = document.cookie.match(/(?:^|; )adminToken=([^;]*)/);
+    return match ? match[1] : null;
+};
+// Helper to include token in headers
+const withAuth = (options = {})=>{
+    const token = getToken();
+    return {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+            ...options.headers || {}
+        }
+    };
+};
+const useStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$react$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["create"])()((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["devtools"])((set)=>({
+        // Initial state
+        categories: [],
+        loadingCategories: false,
+        dailyAreas: [],
+        loadingDailyAreas: false,
+        observations: [],
+        loadingObservations: false,
+        categorySummary: [],
+        // === CATEGORY ACTIONS ===
+        fetchCategories: async ()=>{
+            set({
+                loadingCategories: true
+            });
+            let page = 1;
+            let allCategories = [];
+            let totalPages = 1;
+            do {
+                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])(`/category/get-cound?page=${page}`, withAuth());
+                if (res.error) break;
+                const categories = Array.isArray(res.categories) ? res.categories : [];
+                allCategories = [
+                    ...allCategories,
+                    ...categories
+                ];
+                console.log("sajalu", allCategories);
+                totalPages = res.totalPages || 1;
+                page++;
+            }while (page <= totalPages)
+            set({
+                categories: allCategories,
+                loadingCategories: false
+            });
+        },
+        createCategory: async (data)=>{
+            const payload = {
+                name: data.name
+            }; // send ONLY name (backend requirement)
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
+                url: "/category/add-category",
+                data: payload,
+                options: withAuth()
+            });
+            if (!res.error && res.category) {
+                set((state)=>({
+                        categories: [
+                            ...state.categories,
+                            res.category
+                        ]
+                    }));
+            }
+            return res;
+        },
+        updateCategory: async (id, data)=>{
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["patchRequest"])({
+                url: `/category/edit-category/${id}`,
+                data,
+                options: withAuth()
+            });
+            if (!res.error) {
+                set((state)=>({
+                        categories: state.categories.map((cat)=>cat._id === id ? {
+                                ...cat,
+                                ...data
+                            } : cat)
+                    }));
+            }
+            return res;
+        },
+        deleteCategory: async (id)=>{
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["deleteRequest"])(`/category/delet/${id}`, withAuth());
+            if (!res.error) {
+                set((state)=>({
+                        categories: state.categories.filter((cat)=>cat._id !== id)
+                    }));
+            }
+            return res;
+        },
+        // === DAILY AREAS (TASKS) ===
+        fetchDailyAreas: async ()=>{
+            set({
+                loadingDailyAreas: true
+            });
+            let page = 1;
+            let allItems = [];
+            let totalPages = 1;
+            do {
+                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])(`/task/getall?page=${page}`, withAuth());
+                console.log("Fetched daily areas page", page, "response:", res);
+                if (res.error) break;
+                const items = Array.isArray(res.data) ? res.data : [];
+                allItems = [
+                    ...allItems,
+                    ...items
+                ];
+                totalPages = res.totalPages || 1;
+                page++;
+            }while (page <= totalPages)
+            // Normalize items to always include categoryId
+            const normalized = allItems.map((area)=>({
+                    ...area,
+                    categoryId: typeof area.category === "object" ? area.category._id : area.category,
+                    dateStatuses: area.dateStatuses || []
+                }));
+            set({
+                dailyAreas: normalized,
+                loadingDailyAreas: false
+            });
+        },
+        // ✅ FIXED addDailyArea (categoryId → category)
+        addDailyArea: async (data)=>{
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
+                url: "/task/add-area",
+                data,
+                options: withAuth()
+            });
+            if (!res.error && res.data) {
+                const category = useStore.getState().categories.find((c)=>c._id === data.category);
+                const normalizedArea = {
+                    _id: res.data._id,
+                    areaName: res.data.areaName,
+                    categoryId: category?._id || data.category,
+                    status: res.data.status || "pending",
+                    createdAt: res.data.createdAt || new Date().toISOString()
+                };
+                set((state)=>({
+                        dailyAreas: [
+                            ...state.dailyAreas,
+                            normalizedArea
+                        ]
+                    }));
+            }
+            return res;
+        },
+        // ✅ FULLY FIXED updateDailyStatus
+        // stores/useStore.ts → replace the whole updateDailyStatus with this:
+        updateDailyStatus: async ({ categoryId, areaName, date = "02/02/2024", status, command = "", actionTimeframe = "Open", completed = status === "ok", signature = "", followUp = "" })=>{
+            try {
+                console.log("Sending to backend:", {
+                    categoryId,
+                    areaName,
+                    date,
+                    status,
+                    completed
+                });
+                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
+                    url: "/task/update-status",
+                    data: {
+                        categoryId,
+                        areaName,
+                        date,
+                        status,
+                        command,
+                        actionTimeframe,
+                        completed,
+                        signature,
+                        followUp
+                    },
+                    options: withAuth()
+                });
+                // THIS WILL SHOW YOU THE TRUTH
+                console.log("Backend response:", res);
+                //     console.log("Received actionTimeframe:", req.body.actionTimeframe);
+                // console.log("Allowed enums:", DailyStatusSchema.path("dateStatuses.0.actionTimeframe").enumValues);
+                if (!res.error && res.data) {
+                    set((state)=>({
+                            dailyAreas: state.dailyAreas.map((area)=>area._id === areaId ? {
+                                    ...area,
+                                    dateStatuses: res.data.dateStatuses || area.dateStatuses
+                                } : area)
+                        }));
+                }
+                return res;
+            } catch (err) {
+                // THIS WILL SHOW THE REAL 404 DETAILS
+                console.error("updateDailyStatus FAILED:");
+                console.error("Status:", err?.response?.status);
+                console.error("Data:", err?.response?.data);
+                console.error("Message:", err.message);
+                return {
+                    error: true,
+                    rawError: err
+                };
+            }
+        },
+        fetchCategorySummary: async ()=>{
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])("/task/coundsummary", withAuth());
+            if (!res.error) {
+                set({
+                    categorySummary: res.data || res
+                });
+            }
+        },
+        // === OBSERVATIONS ===
+        fetchObservations: async ()=>{
+            set({
+                loadingObservations: true
+            });
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])("/observation/getall-observations", withAuth());
+            if (!res.error) {
+                set({
+                    observations: res.data || res
+                });
+            }
+            set({
+                loadingObservations: false
+            });
+        },
+        createObservation: async (data)=>{
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
+                url: "/observation/add-observation",
+                data,
+                options: withAuth()
+            });
+            if (!res.error) {
+                set((state)=>({
+                        observations: [
+                            ...state.observations,
+                            res.data || res
+                        ]
+                    }));
+            }
+            return res;
+        },
+        updateObservation: async (id, data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["putRequest"])({
+                url: `/observation/edit-observations/${id}`,
+                data,
+                options: withAuth()
+            }).then((res)=>{
+                if (!res.error) {
+                    set((state)=>({
+                            observations: state.observations.map((obs)=>obs._id === id ? {
+                                    ...obs,
+                                    ...data
+                                } : obs)
+                        }));
+                }
+                return res;
+            }),
+        deleteObservation: async (id)=>{
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["deleteRequest"])(`/observation/delete-observations/${id}`, withAuth());
+            if (!res.error) {
+                set((state)=>({
+                        observations: state.observations.filter((obs)=>obs._id !== id)
+                    }));
+            }
+            return res;
+        }
+    })));
+}),
 "[project]/components/UpdateDetailsModal.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
@@ -1360,6 +1795,8 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$store$2f$useStore$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/store/useStore.ts [app-ssr] (ecmascript)");
+;
 ;
 ;
 const TIMEFRAMES = [
@@ -1384,7 +1821,7 @@ const TIMEFRAMES = [
         color: "#3B82F6"
     }
 ];
-function UpdateDetailsModal({ item, isOpen, onClose }) {
+function UpdateDetailsModal({ item, isOpen, onClose, setLoadingItem }) {
     const [command, setComments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(item.command || "");
     const [timeframe, setTimeframe] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(item.timeframe || "open");
     if (!isOpen) return null;
@@ -1397,9 +1834,18 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
             command: command.trim(),
             actionTimeframe: timeframe
         };
-        console.log("Payload going to store:", payload);
-        await useStore.getState().updateDailyStatus(payload);
-        onClose();
+        // Set loading for this item only
+        setLoadingItem(item._id);
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$store$2f$useStore$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"].getState().updateDailyStatus(payload);
+            await __TURBOPACK__imported__module__$5b$project$5d2f$store$2f$useStore$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"].getState().fetchDailyAreas(); // refresh store data
+        } catch (err) {
+            console.error("Failed to update daily status:", err);
+        } finally{
+            // Stop loading
+            setLoadingItem(null);
+            onClose();
+        }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4",
@@ -1414,7 +1860,7 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                             children: "Update Details"
                         }, void 0, false, {
                             fileName: "[project]/components/UpdateDetailsModal.tsx",
-                            lineNumber: 55,
+                            lineNumber: 63,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1422,13 +1868,13 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                             children: item.element
                         }, void 0, false, {
                             fileName: "[project]/components/UpdateDetailsModal.tsx",
-                            lineNumber: 56,
+                            lineNumber: 64,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                    lineNumber: 54,
+                    lineNumber: 62,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1441,7 +1887,7 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                                     children: "Comments / Action Required"
                                 }, void 0, false, {
                                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                    lineNumber: 61,
+                                    lineNumber: 68,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1452,13 +1898,13 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                                     className: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#17A2A2] focus:border-transparent resize-none"
                                 }, void 0, false, {
                                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                    lineNumber: 62,
+                                    lineNumber: 69,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/UpdateDetailsModal.tsx",
-                            lineNumber: 60,
+                            lineNumber: 67,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1468,7 +1914,7 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                                     children: "Action Timeframe"
                                 }, void 0, false, {
                                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                    lineNumber: 72,
+                                    lineNumber: 79,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1482,18 +1928,18 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                                             children: tf.label
                                         }, tf.value, false, {
                                             fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                            lineNumber: 75,
+                                            lineNumber: 82,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                    lineNumber: 73,
+                                    lineNumber: 80,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/UpdateDetailsModal.tsx",
-                            lineNumber: 71,
+                            lineNumber: 78,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1505,39 +1951,45 @@ function UpdateDetailsModal({ item, isOpen, onClose }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                    lineNumber: 90,
+                                    lineNumber: 97,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: handleSave,
-                                    className: "px-8 py-3 bg-[#17A2A2] text-white rounded-xl hover:bg-[#17A2A2]/90 font-semibold shadow-lg",
-                                    children: "Save Details"
+                                    className: "px-8 py-3 bg-[#17A2A2] text-white rounded-xl hover:bg-[#17A2A2]/90 font-semibold shadow-lg flex items-center gap-2",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Save Details"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/UpdateDetailsModal.tsx",
+                                        lineNumber: 108,
+                                        columnNumber: 15
+                                    }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                                    lineNumber: 96,
+                                    lineNumber: 103,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/UpdateDetailsModal.tsx",
-                            lineNumber: 89,
+                            lineNumber: 96,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/UpdateDetailsModal.tsx",
-                    lineNumber: 59,
+                    lineNumber: 66,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/UpdateDetailsModal.tsx",
-            lineNumber: 53,
+            lineNumber: 61,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/UpdateDetailsModal.tsx",
-        lineNumber: 52,
+        lineNumber: 60,
         columnNumber: 5
     }, this);
 }
@@ -1577,6 +2029,7 @@ function formatDate(dateStr) {
 }
 function AuditTable({ items, isLoading = false, categoryId, categoryName, onToggleStatus, onEdit, onUpdateDetails }) {
     const [modalItem, setModalItem] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [loadingItem, setLoadingItem] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const checkedCount = items.filter((i)=>i.status === "checked").length;
     const hasDetails = (item)=>!!(item.command || item.timeframe);
     // Loading Skeleton
@@ -1595,7 +2048,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     children: "Date"
                                 }, void 0, false, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 64,
+                                    lineNumber: 67,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1603,7 +2056,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     children: "Element"
                                 }, void 0, false, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 65,
+                                    lineNumber: 68,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1611,7 +2064,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     children: "Details"
                                 }, void 0, false, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 66,
+                                    lineNumber: 69,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1619,7 +2072,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     children: "Status"
                                 }, void 0, false, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 67,
+                                    lineNumber: 70,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1627,18 +2080,18 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     children: "Actions"
                                 }, void 0, false, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 68,
+                                    lineNumber: 71,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/audit-table.tsx",
-                            lineNumber: 63,
+                            lineNumber: 66,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/audit-table.tsx",
-                        lineNumber: 62,
+                        lineNumber: 65,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -1656,45 +2109,31 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     className: "h-5 bg-gray-200 rounded w-16 animate-pulse"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 76,
+                                                    lineNumber: 79,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "h-3 bg-gray-200 rounded w-12 animate-pulse"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 77,
+                                                    lineNumber: 80,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 75,
+                                            lineNumber: 78,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 74,
+                                        lineNumber: 77,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                         className: "px-6 py-4",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "h-6 bg-gray-200 rounded w-64 animate-pulse"
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 81,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 80,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                        className: "px-6 py-4",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "h-8 bg-gray-200 rounded-full w-24 animate-pulse"
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
                                             lineNumber: 84,
@@ -1706,9 +2145,9 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                        className: "px-6 py-4 text-center",
+                                        className: "px-6 py-4",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "h-8 w-8 bg-gray-200 rounded-full mx-auto animate-pulse"
+                                            className: "h-8 bg-gray-200 rounded-full w-24 animate-pulse"
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
                                             lineNumber: 87,
@@ -1717,6 +2156,20 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
                                         lineNumber: 86,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                        className: "px-6 py-4 text-center",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "h-8 w-8 bg-gray-200 rounded-full mx-auto animate-pulse"
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/audit-table.tsx",
+                                            lineNumber: 90,
+                                            columnNumber: 19
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/audit-table.tsx",
+                                        lineNumber: 89,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1729,28 +2182,28 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     className: "w-10 h-10 bg-gray-200 rounded-xl animate-pulse"
                                                 }, j, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 92,
+                                                    lineNumber: 95,
                                                     columnNumber: 23
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 90,
+                                            lineNumber: 93,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 89,
+                                        lineNumber: 92,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/components/audit-table.tsx",
-                                lineNumber: 73,
+                                lineNumber: 76,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/components/audit-table.tsx",
-                        lineNumber: 71,
+                        lineNumber: 74,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tfoot", {
@@ -1764,20 +2217,6 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         className: "h-6 bg-gray-300 rounded w-32 animate-pulse"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 105,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 104,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                    className: "px-6 py-5 text-center",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "h-10 bg-gray-300 rounded w-24 mx-auto animate-pulse"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/audit-table.tsx",
                                         lineNumber: 108,
                                         columnNumber: 17
                                     }, this)
@@ -1786,31 +2225,45 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                     lineNumber: 107,
                                     columnNumber: 15
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {}, void 0, false, {
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                    className: "px-6 py-5 text-center",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "h-10 bg-gray-300 rounded w-24 mx-auto animate-pulse"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/audit-table.tsx",
+                                        lineNumber: 111,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
                                     fileName: "[project]/components/audit-table.tsx",
                                     lineNumber: 110,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {}, void 0, false, {
+                                    fileName: "[project]/components/audit-table.tsx",
+                                    lineNumber: 113,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/audit-table.tsx",
-                            lineNumber: 103,
+                            lineNumber: 106,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/audit-table.tsx",
-                        lineNumber: 102,
+                        lineNumber: 105,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/audit-table.tsx",
-                lineNumber: 61,
+                lineNumber: 64,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/components/audit-table.tsx",
-            lineNumber: 60,
+            lineNumber: 63,
             columnNumber: 7
         }, this);
     }
@@ -1821,7 +2274,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
             children: 'No items yet. Click "Add Item" to begin.'
         }, void 0, false, {
             fileName: "[project]/components/audit-table.tsx",
-            lineNumber: 121,
+            lineNumber: 124,
             columnNumber: 7
         }, this);
     }
@@ -1841,7 +2294,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Date"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 136,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1849,7 +2302,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Element"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 134,
+                                        lineNumber: 137,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1857,7 +2310,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Comments"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 135,
+                                        lineNumber: 138,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1865,7 +2318,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Details"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 137,
+                                        lineNumber: 140,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1873,7 +2326,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Status"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 138,
+                                        lineNumber: 141,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1881,18 +2334,18 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Actions"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 139,
+                                        lineNumber: 142,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/audit-table.tsx",
-                                lineNumber: 132,
+                                lineNumber: 135,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/audit-table.tsx",
-                            lineNumber: 131,
+                            lineNumber: 134,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -1917,13 +2370,13 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                                 children: date.month
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/audit-table.tsx",
-                                                                lineNumber: 157,
+                                                                lineNumber: 160,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 155,
+                                                        lineNumber: 158,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1931,18 +2384,18 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: date.year
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 162,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 154,
+                                                lineNumber: 157,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 153,
+                                            lineNumber: 156,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1950,7 +2403,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                             children: item.element
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 163,
+                                            lineNumber: 166,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1958,7 +2411,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                             children: item.command
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 170,
+                                            lineNumber: 173,
                                             columnNumber: 20
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1971,19 +2424,19 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                 children: item.timeframe
                                             }, void 0, false, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 180,
+                                                lineNumber: 183,
                                                 columnNumber: 23
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "text-gray-400 text-sm italic",
                                                 children: "No details yet"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 187,
+                                                lineNumber: 190,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 178,
+                                            lineNumber: 181,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1994,7 +2447,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     children: "Check"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 192,
+                                                    lineNumber: 195,
                                                     columnNumber: 35
                                                 }, this),
                                                 isCrossed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2002,7 +2455,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     children: "Cross"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 193,
+                                                    lineNumber: 196,
                                                     columnNumber: 35
                                                 }, this),
                                                 !isChecked && !isCrossed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2010,13 +2463,13 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                     children: "—"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/audit-table.tsx",
-                                                    lineNumber: 194,
+                                                    lineNumber: 197,
                                                     columnNumber: 50
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 191,
+                                            lineNumber: 194,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2032,12 +2485,12 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                             className: "w-5 h-5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/audit-table.tsx",
-                                                            lineNumber: 208,
+                                                            lineNumber: 211,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 199,
+                                                        lineNumber: 202,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2047,7 +2500,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: "X"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 211,
+                                                        lineNumber: 214,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2057,7 +2510,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: "i"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 223,
+                                                        lineNumber: 226,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2067,30 +2520,30 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                                         children: "Edit"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/audit-table.tsx",
-                                                        lineNumber: 235,
+                                                        lineNumber: 238,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/audit-table.tsx",
-                                                lineNumber: 198,
+                                                lineNumber: 201,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/audit-table.tsx",
-                                            lineNumber: 197,
+                                            lineNumber: 200,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, item._id, true, {
                                     fileName: "[project]/components/audit-table.tsx",
-                                    lineNumber: 149,
+                                    lineNumber: 152,
                                     columnNumber: 17
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/components/audit-table.tsx",
-                            lineNumber: 142,
+                            lineNumber: 145,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tfoot", {
@@ -2103,7 +2556,7 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         children: "Total Completed"
                                     }, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 250,
+                                        lineNumber: 253,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2115,41 +2568,40 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 253,
+                                        lineNumber: 256,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {}, void 0, false, {
                                         fileName: "[project]/components/audit-table.tsx",
-                                        lineNumber: 256,
+                                        lineNumber: 259,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/audit-table.tsx",
-                                lineNumber: 249,
+                                lineNumber: 252,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/audit-table.tsx",
-                            lineNumber: 248,
+                            lineNumber: 251,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/audit-table.tsx",
-                    lineNumber: 130,
+                    lineNumber: 133,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/audit-table.tsx",
-                lineNumber: 129,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             modalItem && (console.log("Opening modal for item:", modalItem), /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$UpdateDetailsModal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                // item structure must match the updated Props interface now
                 item: {
                     _id: modalItem._id,
-                    categoryId: categoryId,
+                    categoryId,
                     element: modalItem.element,
                     createdAt: modalItem.createdAt,
                     command: modalItem.command,
@@ -2157,15 +2609,11 @@ function AuditTable({ items, isLoading = false, categoryId, categoryName, onTogg
                 },
                 isOpen: !!modalItem,
                 onClose: ()=>setModalItem(null),
-                onSave: (itemId, catId, areaName, date, command, timeframe)=>{
-                    // 💡 NEW: Call the updated onUpdateDetails with ALL data
-                    onUpdateDetails(itemId, catId, areaName, date, command, timeframe.toLowerCase());
-                    setModalItem(null);
-                }
+                setLoadingItem: setLoadingItem
             }, void 0, false, {
                 fileName: "[project]/components/audit-table.tsx",
-                lineNumber: 265,
-                columnNumber: 9
+                lineNumber: 268,
+                columnNumber: 7
             }, this)),
             "    "
         ]
@@ -3271,441 +3719,6 @@ function AuditPDFDocument({ categories, inspectedBy, date, time, location, depar
 }
 __turbopack_async_result__();
 } catch(e) { __turbopack_async_result__(e); } }, false);}),
-"[externals]/util [external] (util, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("util", () => require("util"));
-
-module.exports = mod;
-}),
-"[externals]/stream [external] (stream, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("stream", () => require("stream"));
-
-module.exports = mod;
-}),
-"[externals]/path [external] (path, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("path", () => require("path"));
-
-module.exports = mod;
-}),
-"[externals]/http [external] (http, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("http", () => require("http"));
-
-module.exports = mod;
-}),
-"[externals]/https [external] (https, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("https", () => require("https"));
-
-module.exports = mod;
-}),
-"[externals]/url [external] (url, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("url", () => require("url"));
-
-module.exports = mod;
-}),
-"[externals]/fs [external] (fs, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("fs", () => require("fs"));
-
-module.exports = mod;
-}),
-"[externals]/crypto [external] (crypto, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("crypto", () => require("crypto"));
-
-module.exports = mod;
-}),
-"[externals]/http2 [external] (http2, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("http2", () => require("http2"));
-
-module.exports = mod;
-}),
-"[externals]/assert [external] (assert, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("assert", () => require("assert"));
-
-module.exports = mod;
-}),
-"[externals]/zlib [external] (zlib, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("zlib", () => require("zlib"));
-
-module.exports = mod;
-}),
-"[externals]/events [external] (events, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("events", () => require("events"));
-
-module.exports = mod;
-}),
-"[project]/api/index.ts [app-ssr] (ecmascript) <locals>", ((__turbopack_context__) => {
-"use strict";
-
-// @/api/index.ts  ← THIS IS THE WINNING VERSION
-__turbopack_context__.s([
-    "deleteRequest",
-    ()=>deleteRequest,
-    "getRequest",
-    ()=>getRequest,
-    "patchRequest",
-    ()=>patchRequest,
-    "postRequest",
-    ()=>postRequest,
-    "putRequest",
-    ()=>putRequest
-]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/axios/lib/axios.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$const$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/api/const.tsx [app-ssr] (ecmascript)");
-;
-;
-const axiosInstance = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].create({
-    baseURL: __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$const$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["baseUrl"],
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json"
-    }
-});
-const getRequest = async (url)=>{
-    try {
-        const res = await axiosInstance.get(url);
-        return res.data;
-    } catch (err) {
-        return {
-            error: true,
-            message: err.response?.data?.message || err.message
-        };
-    }
-};
-const postRequest = async ({ url, data })=>{
-    try {
-        const res = await axiosInstance.post(url, data);
-        return res.data;
-    } catch (err) {
-        console.error("postRequest error:", err.response?.data || err.message);
-        return {
-            error: true,
-            message: err.response?.data?.message || err.message
-        };
-    }
-};
-const patchRequest = async ({ url, data })=>{
-    try {
-        return (await axiosInstance.patch(url, data)).data;
-    } catch (err) {
-        return {
-            error: true,
-            message: err.response?.data?.message || err.message
-        };
-    }
-};
-const putRequest = async ({ url, data })=>{
-    try {
-        return (await axiosInstance.put(url, data)).data;
-    } catch (err) {
-        return {
-            error: true,
-            message: err.response?.data?.message || err.message
-        };
-    }
-};
-const deleteRequest = async (url)=>{
-    try {
-        return (await axiosInstance.delete(url)).data;
-    } catch (err) {
-        return {
-            error: true,
-            message: err.response?.data?.message || err.message
-        };
-    }
-};
-;
-}),
-"[project]/store/useStore.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
-"use strict";
-
-// stores/useStore.ts
-__turbopack_context__.s([
-    "useStore",
-    ()=>useStore
-]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$react$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/zustand/esm/react.mjs [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/zustand/esm/middleware.mjs [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/api/index.ts [app-ssr] (ecmascript) <locals>"); // adjust path to your api file
-;
-;
-;
-// Get JWT from localStorage
-const getToken = ()=>{
-    const match = document.cookie.match(/(?:^|; )adminToken=([^;]*)/);
-    return match ? match[1] : null;
-};
-// Helper to include token in headers
-const withAuth = (options = {})=>{
-    const token = getToken();
-    return {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-            ...options.headers || {}
-        }
-    };
-};
-const useStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$react$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["create"])()((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zustand$2f$esm$2f$middleware$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["devtools"])((set)=>({
-        // Initial state
-        categories: [],
-        loadingCategories: false,
-        dailyAreas: [],
-        loadingDailyAreas: false,
-        observations: [],
-        loadingObservations: false,
-        categorySummary: [],
-        // === CATEGORY ACTIONS ===
-        fetchCategories: async ()=>{
-            set({
-                loadingCategories: true
-            });
-            let page = 1;
-            let allCategories = [];
-            let totalPages = 1;
-            do {
-                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])(`/category/get-cound?page=${page}`, withAuth());
-                if (res.error) break;
-                const categories = Array.isArray(res.categories) ? res.categories : [];
-                allCategories = [
-                    ...allCategories,
-                    ...categories
-                ];
-                console.log("sajalu", allCategories);
-                totalPages = res.totalPages || 1;
-                page++;
-            }while (page <= totalPages)
-            set({
-                categories: allCategories,
-                loadingCategories: false
-            });
-        },
-        createCategory: async (data)=>{
-            const payload = {
-                name: data.name
-            }; // send ONLY name (backend requirement)
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
-                url: "/category/add-category",
-                data: payload,
-                options: withAuth()
-            });
-            if (!res.error && res.category) {
-                set((state)=>({
-                        categories: [
-                            ...state.categories,
-                            res.category
-                        ]
-                    }));
-            }
-            return res;
-        },
-        updateCategory: async (id, data)=>{
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["patchRequest"])({
-                url: `/category/edit-category/${id}`,
-                data,
-                options: withAuth()
-            });
-            if (!res.error) {
-                set((state)=>({
-                        categories: state.categories.map((cat)=>cat._id === id ? {
-                                ...cat,
-                                ...data
-                            } : cat)
-                    }));
-            }
-            return res;
-        },
-        deleteCategory: async (id)=>{
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["deleteRequest"])(`/category/delet/${id}`, withAuth());
-            if (!res.error) {
-                set((state)=>({
-                        categories: state.categories.filter((cat)=>cat._id !== id)
-                    }));
-            }
-            return res;
-        },
-        // === DAILY AREAS (TASKS) ===
-        fetchDailyAreas: async ()=>{
-            set({
-                loadingDailyAreas: true
-            });
-            let page = 1;
-            let allItems = [];
-            let totalPages = 1;
-            do {
-                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])(`/task/getall?page=${page}`, withAuth());
-                console.log("Fetched daily areas page", page, "response:", res);
-                if (res.error) break;
-                const items = Array.isArray(res.data) ? res.data : [];
-                allItems = [
-                    ...allItems,
-                    ...items
-                ];
-                totalPages = res.totalPages || 1;
-                page++;
-            }while (page <= totalPages)
-            // Normalize items to always include categoryId
-            const normalized = allItems.map((area)=>({
-                    ...area,
-                    categoryId: typeof area.category === "object" ? area.category._id : area.category,
-                    dateStatuses: area.dateStatuses || []
-                }));
-            set({
-                dailyAreas: normalized,
-                loadingDailyAreas: false
-            });
-        },
-        // ✅ FIXED addDailyArea (categoryId → category)
-        addDailyArea: async (data)=>{
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
-                url: "/task/add-area",
-                data,
-                options: withAuth()
-            });
-            if (!res.error && res.data) {
-                const category = useStore.getState().categories.find((c)=>c._id === data.category);
-                const normalizedArea = {
-                    _id: res.data._id,
-                    areaName: res.data.areaName,
-                    categoryId: category?._id || data.category,
-                    status: res.data.status || "pending",
-                    createdAt: res.data.createdAt || new Date().toISOString()
-                };
-                set((state)=>({
-                        dailyAreas: [
-                            ...state.dailyAreas,
-                            normalizedArea
-                        ]
-                    }));
-            }
-            return res;
-        },
-        // ✅ FULLY FIXED updateDailyStatus
-        // stores/useStore.ts → replace the whole updateDailyStatus with this:
-        updateDailyStatus: async ({ categoryId, areaName, date = "02/02/2024", status, command = "", actionTimeframe = "Open", completed = status === "ok", signature = "", followUp = "" })=>{
-            try {
-                console.log("Sending to backend:", {
-                    categoryId,
-                    areaName,
-                    date,
-                    status,
-                    completed
-                });
-                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
-                    url: "/task/update-status",
-                    data: {
-                        categoryId,
-                        areaName,
-                        date,
-                        status,
-                        command,
-                        actionTimeframe,
-                        completed,
-                        signature,
-                        followUp
-                    },
-                    options: withAuth()
-                });
-                // THIS WILL SHOW YOU THE TRUTH
-                console.log("Backend response:", res);
-                //     console.log("Received actionTimeframe:", req.body.actionTimeframe);
-                // console.log("Allowed enums:", DailyStatusSchema.path("dateStatuses.0.actionTimeframe").enumValues);
-                if (!res.error && res.data) {
-                    set((state)=>({
-                            dailyAreas: state.dailyAreas.map((area)=>area._id === areaId ? {
-                                    ...area,
-                                    dateStatuses: res.data.dateStatuses || area.dateStatuses
-                                } : area)
-                        }));
-                }
-                return res;
-            } catch (err) {
-                // THIS WILL SHOW THE REAL 404 DETAILS
-                console.error("updateDailyStatus FAILED:");
-                console.error("Status:", err?.response?.status);
-                console.error("Data:", err?.response?.data);
-                console.error("Message:", err.message);
-                return {
-                    error: true,
-                    rawError: err
-                };
-            }
-        },
-        fetchCategorySummary: async ()=>{
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])("/task/coundsummary", withAuth());
-            if (!res.error) {
-                set({
-                    categorySummary: res.data || res
-                });
-            }
-        },
-        // === OBSERVATIONS ===
-        fetchObservations: async ()=>{
-            set({
-                loadingObservations: true
-            });
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["getRequest"])("/observation/getall-observations", withAuth());
-            if (!res.error) {
-                set({
-                    observations: res.data || res
-                });
-            }
-            set({
-                loadingObservations: false
-            });
-        },
-        createObservation: async (data)=>{
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["postRequest"])({
-                url: "/observation/add-observation",
-                data,
-                options: withAuth()
-            });
-            if (!res.error) {
-                set((state)=>({
-                        observations: [
-                            ...state.observations,
-                            res.data || res
-                        ]
-                    }));
-            }
-            return res;
-        },
-        updateObservation: async (id, data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["putRequest"])({
-                url: `/observation/edit-observations/${id}`,
-                data,
-                options: withAuth()
-            }).then((res)=>{
-                if (!res.error) {
-                    set((state)=>({
-                            observations: state.observations.map((obs)=>obs._id === id ? {
-                                    ...obs,
-                                    ...data
-                                } : obs)
-                        }));
-                }
-                return res;
-            }),
-        deleteObservation: async (id)=>{
-            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$api$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["deleteRequest"])(`/observation/delete-observations/${id}`, withAuth());
-            if (!res.error) {
-                set((state)=>({
-                        observations: state.observations.filter((obs)=>obs._id !== id)
-                    }));
-            }
-            return res;
-        }
-    })));
-}),
 "[project]/components/housekeeping-audit.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
@@ -3744,6 +3757,7 @@ function HousekeepingAudit() {
     const [editingItem, setEditingItem] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [dateFilter, setDateFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({});
     const [exporting, setExporting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [loadingItemId, setLoadingItemId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     // NEW: Track which category needs refresh (only one table refreshes)
     const [refreshingCategoryId, setRefreshingCategoryId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -3895,7 +3909,7 @@ function HousekeepingAudit() {
             children: "Loading audit data..."
         }, void 0, false, {
             fileName: "[project]/components/housekeeping-audit.tsx",
-            lineNumber: 213,
+            lineNumber: 214,
             columnNumber: 14
         }, this);
     }
@@ -3912,7 +3926,7 @@ function HousekeepingAudit() {
                                 children: "Housekeeping Audit List"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 221,
+                                lineNumber: 222,
                                 columnNumber: 13
                             }, this),
                             transformedCategories.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3926,13 +3940,13 @@ function HousekeepingAudit() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 223,
+                                lineNumber: 224,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 220,
+                        lineNumber: 221,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3943,7 +3957,7 @@ function HousekeepingAudit() {
                                 activeFilter: dateFilter
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 230,
+                                lineNumber: 231,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3952,7 +3966,7 @@ function HousekeepingAudit() {
                                 children: "+ Add Category"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 231,
+                                lineNumber: 232,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3964,19 +3978,19 @@ function HousekeepingAudit() {
                                 }, void 0, false) : "Export PDF"
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 234,
+                                lineNumber: 235,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 229,
+                        lineNumber: 230,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 219,
+                lineNumber: 220,
                 columnNumber: 9
             }, this),
             showCategoryForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$category$2d$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3984,7 +3998,7 @@ function HousekeepingAudit() {
                 onCancel: ()=>setShowCategoryForm(false)
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 242,
+                lineNumber: 243,
                 columnNumber: 11
             }, this),
             showItemForm && selectedCategoryId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$audit$2d$item$2d$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3996,7 +4010,7 @@ function HousekeepingAudit() {
                 }
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 246,
+                lineNumber: 247,
                 columnNumber: 11
             }, this),
             filteredCategories.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4007,7 +4021,7 @@ function HousekeepingAudit() {
                         children: transformedCategories.length === 0 ? "No categories yet. Add your first category to get started." : "No items match the current filter."
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 259,
+                        lineNumber: 260,
                         columnNumber: 13
                     }, this),
                     transformedCategories.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4016,7 +4030,7 @@ function HousekeepingAudit() {
                         children: "+ Add Category"
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 266,
+                        lineNumber: 267,
                         columnNumber: 15
                     }, this),
                     transformedCategories.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4025,13 +4039,13 @@ function HousekeepingAudit() {
                         children: "Clear Filter"
                     }, void 0, false, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 271,
+                        lineNumber: 272,
                         columnNumber: 15
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 258,
+                lineNumber: 259,
                 columnNumber: 11
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-6",
@@ -4048,7 +4062,7 @@ function HousekeepingAudit() {
                                                 children: category.name
                                             }, void 0, false, {
                                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                                lineNumber: 282,
+                                                lineNumber: 283,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4059,13 +4073,13 @@ function HousekeepingAudit() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                                lineNumber: 283,
+                                                lineNumber: 284,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/housekeeping-audit.tsx",
-                                        lineNumber: 281,
+                                        lineNumber: 282,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4074,13 +4088,13 @@ function HousekeepingAudit() {
                                         children: "+ Add Item"
                                     }, void 0, false, {
                                         fileName: "[project]/components/housekeeping-audit.tsx",
-                                        lineNumber: 287,
+                                        lineNumber: 288,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 280,
+                                lineNumber: 281,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4096,35 +4110,43 @@ function HousekeepingAudit() {
                                         setEditingItem(item);
                                         setShowItemForm(true);
                                     },
-                                    onUpdateDetails: (itemId, updates)=>{
-                                        setRefreshingCategoryId(category.id);
-                                        setTimeout(()=>setRefreshingCategoryId(null), 500);
+                                    onUpdateDetails: (itemId, catId, areaName, date, command, timeframe)=>{
+                                        setLoadingItemId(itemId); // start loading
+                                        __TURBOPACK__imported__module__$5b$project$5d2f$store$2f$useStore$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"].getState().updateDailyStatus({
+                                            dateStatusId: itemId,
+                                            categoryId: catId,
+                                            areaName,
+                                            date,
+                                            command,
+                                            actionTimeframe: timeframe,
+                                            status: "notok"
+                                        }).then(()=>__TURBOPACK__imported__module__$5b$project$5d2f$store$2f$useStore$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useStore"].getState().fetchDailyAreas()).finally(()=>setLoadingItemId(null));
                                     }
                                 }, `${category.id}-${refreshingCategoryId === category.id ? 'refresh' : ''}`, false, {
                                     fileName: "[project]/components/housekeeping-audit.tsx",
-                                    lineNumber: 296,
-                                    columnNumber: 19
+                                    lineNumber: 297,
+                                    columnNumber: 18
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/housekeeping-audit.tsx",
-                                lineNumber: 295,
+                                lineNumber: 296,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, category.id, true, {
                         fileName: "[project]/components/housekeeping-audit.tsx",
-                        lineNumber: 279,
+                        lineNumber: 280,
                         columnNumber: 15
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/housekeeping-audit.tsx",
-                lineNumber: 277,
+                lineNumber: 278,
                 columnNumber: 11
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/housekeeping-audit.tsx",
-        lineNumber: 217,
+        lineNumber: 218,
         columnNumber: 7
     }, this);
 }
@@ -5666,4 +5688,4 @@ __turbopack_async_result__();
 } catch(e) { __turbopack_async_result__(e); } }, false);}),
 ];
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__ced5f77a._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__c3d05296._.js.map

@@ -575,6 +575,10 @@
     display: grid;
   }
 
+  .inline {
+    display: inline;
+  }
+
   .inline-flex {
     display: inline-flex;
   }
@@ -1345,6 +1349,10 @@
     .text-white\/80 {
       color: color-mix(in oklab, var(--color-white) 80%, transparent);
     }
+  }
+
+  .lowercase {
+    text-transform: lowercase;
   }
 
   .uppercase {

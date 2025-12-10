@@ -8,12 +8,22 @@ import { Check } from "lucide-react";
 
 interface Props {
   items: AuditItem[];
-  isLoading?: boolean; // ← NEW: Add loading state
+  isLoading?: boolean; 
   categoryId: string;
   categoryName: string;
   onToggleStatus: (catId: string, itemId: string, status: "checked" | "crossed") => void;
   onEdit: (item: AuditItem) => void;
-  onUpdateDetails: (itemId: string, updates: { comments?: string; timeframe?: Timeframe }) => void;
+  // 💡 NEW: Update the definition of onUpdateDetails 
+  onUpdateDetails: (
+    dateStatusId: string,
+    categoryId: string,
+    areaName: string,
+    date: string,
+    command: string, 
+    timeframe: Timeframe
+  ) => void;
+
+   setLoadingItem: (id: string | null) => void;
 }
 
 const TIMEFRAME_COLORS: Record<Timeframe, string> = {
@@ -40,11 +50,12 @@ export default function AuditTable({
   onToggleStatus,
   onEdit,
   onUpdateDetails,
+
 }: Props) {
   const [modalItem, setModalItem] = useState<AuditItem | null>(null);
-
+const [loadingItem, setLoadingItem] = useState<string | null>(null);
   const checkedCount = items.filter((i) => i.status === "checked").length;
-  const hasDetails = (item: AuditItem) => !!(item.comments || item.timeframe);
+  const hasDetails = (item: AuditItem) => !!(item.command || item.timeframe);
 
   // Loading Skeleton
   if (isLoading) {
@@ -124,6 +135,8 @@ export default function AuditTable({
             <tr className="bg-gradient-to-r from-[#1D3C8F]/10 to-[#17A2A2]/10 border-b-2 border-[#1D3C8F]/20">
               <th className="px-6 py-4 text-left text-sm font-bold text-gray-800">Date</th>
               <th className="px-6 py-4 text-left text-sm font-bold text-gray-800">Element</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800">Comments</th>
+
               <th className="px-6 py-4 text-left text-sm font-bold text-gray-800">Details</th>
               <th className="px-6 py-4 text-center text-sm font-bold text-gray-800">Status</th>
               <th className="px-6 py-4 text-center text-sm font-bold text-gray-800">Actions</th>
@@ -131,8 +144,6 @@ export default function AuditTable({
           </thead>
           <tbody>
             {items.map((item) => {
-              console.log("ITEM DEBUG:", item);
-
               const date = formatDate(item.createdAt);
               const isChecked = item.status === "checked";
               const isCrossed = item.status === "crossed";
@@ -158,6 +169,13 @@ export default function AuditTable({
                     }`}
                   >
                     {item.element}
+                  </td>
+                   <td
+                    className={`px-6 py-4 font-medium ${
+                      isCrossed ? "line-through text-gray-400" : "text-gray-900"
+                    }`}
+                  >
+                    {item.command}
                   </td>
 
                   <td className="px-6 py-4">
@@ -212,7 +230,7 @@ export default function AuditTable({
                             ? "bg-[#17A2A2] text-white ring-2 ring-[#17A2A2]/30"
                             : "bg-gray-100 text-gray-600 hover:bg-[#17A2A2] hover:text-white"
                         }`}
-                        title="Add comments & timeframe"
+                        title="Add command & timeframe"
                       >
                         i
                       </button>
@@ -245,17 +263,23 @@ export default function AuditTable({
       </div>
 
       {/* Update Details Modal */}
-      {modalItem && (
-        <UpdateDetailsModal
-          item={modalItem}
-          isOpen={!!modalItem}
-          onClose={() => setModalItem(null)}
-          onSave={(comments, timeframe) => {
-            onUpdateDetails(modalItem._id, { comments, timeframe });
-            setModalItem(null);
-          }}
-        />
-      )}
-    </>
-  );
+     {modalItem && (
+      console.log("Opening modal for item:", modalItem),
+      <UpdateDetailsModal
+  item={{
+    _id: modalItem._id,
+    categoryId,
+    element: modalItem.element,
+    createdAt: modalItem.createdAt,
+    command: modalItem.command,
+    timeframe: modalItem.timeframe,
+  }}
+  isOpen={!!modalItem}
+  onClose={() => setModalItem(null)}
+ setLoadingItem={setLoadingItem}  // 👈 pass it here
+/>
+
+      )}
+    </>
+  );
 }
